@@ -34,7 +34,6 @@
 #include "mongo/db/geo/core.h"
 #include "mongo/db/index_names.h"
 #include "mongo/db/index/2d_common.h"
-#include "mongo/db/index/expression_keys_private.h"
 #include "mongo/db/index/expression_params.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/db/pdfile.h"
@@ -47,16 +46,18 @@ namespace mongo {
         const IndexDescriptor* descriptor = btreeState->descriptor();
 
         ExpressionParams::parseTwoDParams(descriptor->infoObj(), &_params);
+
+        _keyGenerator.reset( new TwoDKeyGenerator( _params ) );
     }
 
     /** Finds the key objects to put in an index */
     void TwoDAccessMethod::getKeys(const BSONObj& obj, BSONObjSet* keys) {
-        ExpressionKeysPrivate::get2DKeys(obj, _params, keys, NULL);
+        _keyGenerator->getKeys( obj, keys );
     }
 
     /** Finds all locations in a geo-indexed object */
     void TwoDAccessMethod::getKeys(const BSONObj& obj, vector<BSONObj>& locs) const {
-        ExpressionKeysPrivate::get2DKeys(obj, _params, NULL, &locs);
+        _keyGenerator->getKeys( obj, NULL, &locs );
     }
 
 }  // namespace mongo

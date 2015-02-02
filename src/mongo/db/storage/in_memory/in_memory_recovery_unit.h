@@ -65,6 +65,8 @@ namespace mongo {
 
         virtual void setRollbackWritesDisabled() {}
 
+        virtual SnapshotId getSnapshotId() const { return SnapshotId(); }
+
     private:
         typedef boost::shared_ptr<Change> ChangePtr;
         typedef std::vector<ChangePtr> Changes;

@@ -69,9 +69,3 @@ void obj_cursor(void);
 void obj_drop(void);
 void obj_upgrade(void);
 void obj_verify(void);
-
-void die(int, const char *, ...)
-#if defined(__GNUC__)
-__attribute__((noreturn))
-#endif
-;

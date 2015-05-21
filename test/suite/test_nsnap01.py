@@ -37,7 +37,7 @@ import wiredtiger, wttest
 class test_nsnap01(wttest.WiredTigerTestCase, suite_subprocess):
     tablename = 'test_nsnap01'
     uri = 'table:' + tablename
-    nrows = 1000
+    nrows = 300
     nrows_per_snap = 10
     nsnapshots = 10
 

@@ -42,7 +42,7 @@ load("jstests/libs/csrs_upgrade_util.js");
     var joinParallelShell = startParallelShell(
         function() {
             db = db.getSiblingDB('csrs_upgrade_during_mr');
-            for (var i = 0; i < 100; i++) {
+            for (var i = 0; i < 500; i++) {
                 if (i % 10 == 0) {
                     print("Performing map reduce iteration: " + i);
                 }
@@ -70,6 +70,9 @@ load("jstests/libs/csrs_upgrade_util.js");
                 assert.commandWorked(res);
             }
 
+            // Signal to main test thread that parallel shell is finished running.
+            assert.writeOK(db.signal.insert({finished: true}));
+
             jsTestLog("Finished performing mapReduce ops in parallel shell");
         }, coordinator.getMongos(0).port);
 
@@ -84,6 +87,10 @@ load("jstests/libs/csrs_upgrade_util.js");
     coordinator.shutdownOneSCCCNode();
     coordinator.allowAllCSRSNodesToVote();
     coordinator.switchToCSRSMode();
+
+    // Make sure that parallel shell didn't finish running before upgrade was complete.
+    var signalColl = coordinator.getMongos(0).getDB(coordinator.getTestDBName()).signal;
+    assert.eq(null, signalColl.findOne({finished: true}));
 
     joinParallelShell();
 

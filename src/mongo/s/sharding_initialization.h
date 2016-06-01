@@ -35,10 +35,18 @@
 
 namespace mongo {
 
+namespace executor {
+class TaskExecutor;
+}  // namespace executor
+
 class ConnectionString;
 class OperationContext;
 class ShardFactory;
 class Status;
+class ShardingCatalogClient;
+class ShardingCatalogManager;
+using ShardingCatalogManagerBuilder = stdx::function<std::unique_ptr<ShardingCatalogManager>(
+    ShardingCatalogClient*, std::unique_ptr<executor::TaskExecutor>)>;
 
 namespace rpc {
 class ShardingEgressMetadataHook;
@@ -52,7 +60,8 @@ using ShardingEgressMetadataHookBuilder =
  */
 Status initializeGlobalShardingState(const ConnectionString& configCS,
                                      std::unique_ptr<ShardFactory> shardFactory,
-                                     rpc::ShardingEgressMetadataHookBuilder hookBuilder);
+                                     rpc::ShardingEgressMetadataHookBuilder hookBuilder,
+                                     ShardingCatalogManagerBuilder catalogManagerBuilder);
 
 /**
  * Tries to contact the config server and reload the shard registry until it succeeds or

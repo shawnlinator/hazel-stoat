@@ -77,41 +77,4 @@ void Notification::notifyOne() {
     _condition.notify_one();
 }
 
-/* --- NotifyAll --- */
-
-NotifyAll::NotifyAll() {
-    _lastDone = 0;
-    _lastReturned = 0;
-    _nWaiting = 0;
-}
-
-NotifyAll::When NotifyAll::now() {
-    stdx::lock_guard<stdx::mutex> lock(_mutex);
-    return ++_lastReturned;
-}
-
-void NotifyAll::waitFor(When e) {
-    stdx::unique_lock<stdx::mutex> lock(_mutex);
-    ++_nWaiting;
-    while (_lastDone < e) {
-        _condition.wait(lock);
-    }
-}
-
-void NotifyAll::awaitBeyondNow() {
-    stdx::unique_lock<stdx::mutex> lock(_mutex);
-    ++_nWaiting;
-    When e = ++_lastReturned;
-    while (_lastDone <= e) {
-        _condition.wait(lock);
-    }
-}
-
-void NotifyAll::notifyAll(When e) {
-    stdx::unique_lock<stdx::mutex> lock(_mutex);
-    _lastDone = e;
-    _nWaiting = 0;
-    _condition.notify_all();
-}
-
 }  // namespace mongo

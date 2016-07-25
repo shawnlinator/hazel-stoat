@@ -32,11 +32,11 @@
 #include <string>
 
 #include "mongo/base/status_with.h"
+#include "mongo/db/query/canonical_query.h"
 
 namespace mongo {
 
 class BSONObj;
-class CanonicalQuery;
 class ExtensionsCallback;
 class NamespaceString;
 class OperationContext;

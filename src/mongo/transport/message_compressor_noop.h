@@ -26,28 +26,26 @@
  *    it in the license file.
  */
 
-#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kNetwork
-
 #include "mongo/transport/message_compressor_base.h"
 
 namespace mongo {
 
 class NoopMessageCompressor final : public MessageCompressorBase {
 public:
-    NoopMessageCompressor() : MessageCompressorBase(0, "noop") {}
+    NoopMessageCompressor() : MessageCompressorBase(MessageCompressor::kNoop) {}
 
     std::size_t getMaxCompressedSize(size_t inputSize) override {
         return inputSize;
     }
 
     StatusWith<std::size_t> compressData(ConstDataRange input, DataRange output) override {
-        memcpy(const_cast<char*>(output.data()), input.data(), input.length());
+        output.write(input);
         counterHitCompress(input.length(), input.length());
         return {input.length()};
     }
 
     StatusWith<std::size_t> decompressData(ConstDataRange input, DataRange output) override {
-        memcpy(const_cast<char*>(output.data()), input.data(), input.length());
+        output.write(input);
         counterHitDecompress(input.length(), input.length());
         return {input.length()};
     }

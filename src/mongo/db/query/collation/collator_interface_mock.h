@@ -65,8 +65,6 @@ public:
 
     int compare(StringData left, StringData right) const final;
 
-    int compare(const BSONObj& left, const BSONObj& right) const final;
-
     ComparisonKey getComparisonKey(StringData stringData) const final;
 
 private:

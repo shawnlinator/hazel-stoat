@@ -29,6 +29,8 @@ executor:
         oplogSize: 511
         set_parameters:
           enableTestCommands: 1
+          numInitialSyncAttempts: 1
+          numInitialSyncConnectAttempts: 60
       num_nodes: 2
       start_initial_sync_node: True
       replset_config_options:

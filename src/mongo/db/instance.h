@@ -31,20 +31,11 @@
 
 #pragma once
 
-#include "mongo/client/dbclientinterface.h"
-#include "mongo/db/curop.h"
-#include "mongo/db/dbmessage.h"
-#include "mongo/db/operation_context.h"
-#include "mongo/db/storage/storage_options.h"
+#include <string>
 
 namespace mongo {
 
 extern std::string dbExecCommand;
-
-void assembleResponse(OperationContext* txn,
-                      Message& m,
-                      DbResponse& dbresponse,
-                      const HostAndPort& client);
 
 void maybeCreatePidFile();
 

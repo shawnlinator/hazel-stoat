@@ -70,7 +70,7 @@ public:
                      int options,
                      std::string& errmsg,
                      BSONObjBuilder& result) {
-        Grid::get(opCtx)->catalogCache()->invalidateAll();
+        Grid::get(opCtx)->catalogCache()->purgeAllDatabases();
 
         result.appendBool("flushed", true);
         return true;

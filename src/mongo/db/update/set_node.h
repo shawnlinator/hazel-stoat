@@ -29,6 +29,7 @@
 #pragma once
 
 #include "mongo/db/update/update_leaf_node.h"
+#include "mongo/stdx/memory.h"
 
 namespace mongo {
 
@@ -38,6 +39,10 @@ namespace mongo {
 class SetNode : public UpdateLeafNode {
 public:
     Status init(BSONElement modExpr, const CollatorInterface* collator) final;
+
+    std::unique_ptr<UpdateNode> clone() const final {
+        return stdx::make_unique<SetNode>(*this);
+    }
 
     void setCollator(const CollatorInterface* collator) final {}
 

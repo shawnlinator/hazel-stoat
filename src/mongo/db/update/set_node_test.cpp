@@ -198,7 +198,7 @@ TEST(SetNodeTest, ApplyPositional) {
     Document doc(fromjson("{a: [0, 1, 2]}"));
     FieldRef pathToCreate("");
     FieldRef pathTaken("a.1");
-    StringData matchedField;
+    StringData matchedField("1");
     auto fromReplication = false;
     UpdateIndexData indexData;
     indexData.addPath("a");
@@ -206,7 +206,7 @@ TEST(SetNodeTest, ApplyPositional) {
     LogBuilder logBuilder(logDoc.root());
     auto indexesAffected = false;
     auto noop = false;
-    ASSERT_OK(node.apply(doc.root(),
+    ASSERT_OK(node.apply(doc.root()["a"]["1"],
                          &pathToCreate,
                          &pathTaken,
                          matchedField,
@@ -217,7 +217,7 @@ TEST(SetNodeTest, ApplyPositional) {
                          &noop));
     ASSERT_FALSE(noop);
     ASSERT_TRUE(indexesAffected);
-    ASSERT_EQUALS(fromjson("{a: [0, 1, 2]}"), doc);
+    ASSERT_EQUALS(fromjson("{a: [0, 6, 2]}"), doc);
     ASSERT_TRUE(doc.isInPlaceModeEnabled());
     ASSERT_EQUALS(fromjson("{$set: {'a.1': 6}}"), logDoc);
 }

@@ -49,21 +49,19 @@ TEST(SessionTxnStateHolder, Demo) {
 
     {
         // Caller has now control of txn state and can read/write from it.
-        auto txnStateToken = txnStateHolder->getTransactionState(&opCtx, 1);
+        auto txnStateToken = txnStateHolder->getTransactionState(&opCtx);
 
-        auto partialResults = txnStateToken.get()->getPartialResults();
+        auto writeHistory = txnStateToken.get()->getWriteHistory(&opCtx);
 
-        // Go over request object, and mark all statements that has results in partialResults as
-        // done.
+        // Go over request object, and mark all statements that is in writeHistory as done.
+        // In addition, convert oplog entries into results appropriate for command.
 
         // For every statement that is not yet 'done':
         // Perform write op, and then store result:
 
         // Commented out since OperationContextNoop uses LockerNoop
-        // SingleWriteResult result;
         // repl::OpTime opTime;
-        // StmtId stmtId = 0;
-        // txnStateToken.get()->storePartialResult(&opCtx, stmtId, result, opTime);
+        // txnStateToken.get()->saveTxnProgress(&opCtx, opTime);
 
         // Consolidate partial results into final results for command response
     }

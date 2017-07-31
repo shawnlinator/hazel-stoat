@@ -60,18 +60,4 @@ LogicalSessionIdSet makeLogicalSessionIds(const std::vector<LogicalSessionFromCl
                                           OperationContext* opCtx,
                                           std::initializer_list<Privilege> allowSpoof = {});
 
-/**
- * Parses the session information from the body of a request and installs it on the current
- * operation context. Must only be called once per operation and should be done right in the
- * beginning.
- *
- * Throws if the sessionId/txnNumber combination is not properly formatted.
- *
- * requiresAuth specifies if the command we're initializing operationSessionInfo for requires
- * authorization or not.  This can be determined by invoking ->requiresAuth() on the parsed command.
- */
-void initializeOperationSessionInfo(OperationContext* opCtx,
-                                    const BSONObj& requestBody,
-                                    bool requiresAuth);
-
 }  // namespace mongo

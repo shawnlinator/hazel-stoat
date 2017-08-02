@@ -29,8 +29,8 @@
 #pragma once
 
 #include "mongo/db/matcher/expression.h"
-#include "mongo/db/matcher/expression_leaf.h"
 #include "mongo/db/matcher/expression_tree.h"
+#include "mongo/db/matcher/expression_type.h"
 
 namespace mongo {
 
@@ -55,7 +55,7 @@ private:
     // Parser for the JSON Schema 'properties' keyword.
     static StatusWithMatchExpression _parseProperties(StringData path,
                                                       BSONElement propertiesElt,
-                                                      TypeMatchExpression* typeExpr);
+                                                      InternalSchemaTypeExpression* typeExpr);
 };
 
 }  // namespace mongo

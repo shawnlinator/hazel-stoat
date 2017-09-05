@@ -90,11 +90,7 @@ public:
             return appendCommandStatus(result, status);
         }
 
-        Status startSessionStatus = lsCache->startSession(opCtx, record.get());
-
-        if (!startSessionStatus.isOK()) {
-            return appendCommandStatus(result, startSessionStatus);
-        }
+        lsCache->startSession(opCtx, record.get());
 
         makeLogicalSessionToClient(record->getId()).serialize(&result);
 

@@ -66,6 +66,10 @@ public:
         return Status::OK();
     }
 
+    Status reapNow(Client* client) override {
+        return Status::OK();
+    }
+
     Date_t now() override {
         return Date_t::now();
     }

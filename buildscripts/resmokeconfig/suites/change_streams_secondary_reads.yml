@@ -29,6 +29,8 @@ selector:
   # are the message(s) that cause the tag to be warranted.
   ##
   # "Cowardly refusing to override read preference of command: ..."
+  # "Cowardly refusing to run test with overridden read preference when it reads from a
+  #  non-replicated collection: ..."
   - assumes_read_preference_unchanged
 
 executor:

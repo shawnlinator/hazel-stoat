@@ -29795,7 +29795,9 @@ SQLITE_PRIVATE const char *sqlite3OpcodeName(int i){
        && (!defined(TARGET_IPHONE_SIMULATOR) || (TARGET_IPHONE_SIMULATOR==0))
 #    define HAVE_GETHOSTUUID 1
 #  else
-#    warning "gethostuuid() is disabled."
+// MongoDB modification
+// Disable this warning so that this can be built with -Werror
+// #    warning "gethostuuid() is disabled."
 #  endif
 #endif
 

@@ -51,15 +51,32 @@ public:
     virtual ~HttpClient() = default;
 
     /**
-     * Url is a full URL with hostname and protocol specification.
+     * Configure all future requests on this client to allow insecure http:// urls.
+     * By default, only https:// is allowed.
      */
-    virtual Future<std::vector<uint8_t>> postAsync(
-        StringData url, std::shared_ptr<std::vector<std::uint8_t>> data) = 0;
+    virtual void allowInsecureHTTP(bool allow) = 0;
+
+    /**
+     * Assign a set of headers for this request.
+     */
+    virtual void setHeaders(const std::vector<std::string>& headers) = 0;
+
+    /**
+     * Perform a POST request to specified URL.
+     */
+    virtual std::vector<uint8_t> post(const std::string& url, ConstDataRange data) const = 0;
+
+    /**
+     * Futurized helper for HttpClient::post().
+     */
+    Future<std::vector<uint8_t>> postAsync(executor::ThreadPoolTaskExecutor* executor,
+                                           StringData url,
+                                           std::shared_ptr<std::vector<std::uint8_t>> data) const;
 
     /**
      * Factory method provided by client implementation.
      */
-    static std::unique_ptr<HttpClient> create(std::unique_ptr<executor::ThreadPoolTaskExecutor>);
+    static std::unique_ptr<HttpClient> create();
 };
 
 }  // namespace mongo

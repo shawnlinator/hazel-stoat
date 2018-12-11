@@ -175,7 +175,7 @@ selector:
   - jstests/core/or4.js
   - jstests/core/temp_cleanup.js
 
-  # TODO: SERVER-38570 txn_override.js does not check writeError field.
+  # TODO: SERVER-38690 Mongos should throw write targeting errors in a transaction.
   - jstests/core/update_setOnInsert.js
   
   # TODO: SERVER-38588 Hybrid index builds can miss documents during secondary replication.

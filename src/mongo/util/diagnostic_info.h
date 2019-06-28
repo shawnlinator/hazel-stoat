@@ -69,6 +69,7 @@ private:
     Date_t _timestamp;
     StringData _captureName;
 
+
     DiagnosticInfo(const Date_t& timestamp, const StringData& captureName)
         : _timestamp(timestamp), _captureName(captureName) {}
 };

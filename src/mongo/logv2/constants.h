@@ -35,4 +35,7 @@ namespace mongo::logv2::constants {
 // memory.
 constexpr size_t kNumStaticAttrs = 16;
 
+// Allocate extra space to fit some escape sequences
+constexpr size_t kReservedSpaceForEscaping = 16;
+
 }  // namespace mongo::logv2::constants

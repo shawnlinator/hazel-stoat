@@ -31,18 +31,25 @@
 
 namespace mongo {
 
+Mutex::~Mutex() {
+    invariant(!_isLocked);
+}
+
 void Mutex::lock() {
     if (_mutex.try_lock()) {
+        _isLocked = true;
         _onQuickLock(_id);
         return;
     }
 
     _onContendedLock(_id);
     _mutex.lock();
+    _isLocked = true;
     _onSlowLock(_id);
 }
 void Mutex::unlock() {
     _onUnlock(_id);
+    _isLocked = false;
     _mutex.unlock();
 }
 bool Mutex::try_lock() {
@@ -50,6 +57,7 @@ bool Mutex::try_lock() {
         return false;
     }
 
+    _isLocked = true;
     _onQuickLock(_id);
     return true;
 }

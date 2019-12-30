@@ -38,7 +38,7 @@ namespace mongo {
  */
 class ReadWriteConcernDefaultsLookupMock {
 public:
-    ReadWriteConcernDefaults::LookupFn getLookupFn();
+    ReadWriteConcernDefaults::FetchDefaultsFn getFetchDefaultsFn();
 
     boost::optional<RWConcernDefault> lookup(OperationContext* opCtx);
 

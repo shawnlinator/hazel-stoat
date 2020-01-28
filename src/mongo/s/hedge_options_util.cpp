@@ -39,7 +39,7 @@ boost::optional<executor::RemoteCommandRequestOnAny::HedgeOptions> extractHedgeO
     OperationContext* opCtx, const BSONObj& cmdObj) {
     const auto hedgingMode = ReadPreferenceSetting::get(opCtx).hedgingMode;
 
-    if (hedgingMode && hedgingMode->getEnabled()) {
+    if (gReadHedgingMode == kReadHedgingModeOn && hedgingMode && hedgingMode->getEnabled()) {
         boost::optional<int> maxTimeMS;
         if (auto cmdOptionMaxTimeMSField = cmdObj[QueryRequest::cmdOptionMaxTimeMS]) {
             maxTimeMS = uassertStatusOK(QueryRequest::parseMaxTimeMS(cmdOptionMaxTimeMSField));

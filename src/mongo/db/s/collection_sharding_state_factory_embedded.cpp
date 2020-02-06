@@ -81,6 +81,10 @@ public:
         ShardingMigrationCriticalSection::Operation) const override {
         return nullptr;
     }
+
+    void toBSONPending(BSONArrayBuilder&) const override {}
+
+    void setFilteringMetadata(OperationContext*, CollectionMetadata) override {}
 };
 
 class CollectionShardingStateFactoryEmbedded final : public CollectionShardingStateFactory {

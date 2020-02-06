@@ -58,7 +58,7 @@ public:
     LogSource& source() override;
 
     Status configure(ConfigurationOptions const& options);
-    Status rotate();
+    Status rotate(bool rename, StringData renameSuffix);
 
     LogComponentSettings& settings();
 

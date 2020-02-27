@@ -34,6 +34,7 @@
 #include "mongo/logger/log_component.h"
 #include "mongo/logger/logger.h"
 #include "mongo/logv2/log_component.h"
+#include "mongo/util/log_global_settings.h"
 
 namespace mongo {
 

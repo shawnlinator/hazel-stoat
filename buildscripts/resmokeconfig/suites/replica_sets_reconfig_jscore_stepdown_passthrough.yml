@@ -156,6 +156,7 @@ executor:
           networkErrorAndTxnOverrideConfig:
             retryOnNetworkErrors: true
             backgroundReconfigs: true
+          overrideRetryAttempts: 3
           sessionOptions:
             writeConcern:
               w: "majority"

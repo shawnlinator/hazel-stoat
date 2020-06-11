@@ -54,14 +54,14 @@ setLogVerbosity(rst.nodes, {"replication": {"verbosity": 2}});
 let serverStatus = assert.commandWorked(testNode.adminCommand({serverStatus: 1})).metrics.repl;
 assert.eq(0, serverStatus.syncSource.numSyncSourceChangesDueToSignificantlyCloserNode);
 
+jsTestLog("Forcing sync sources for the secondaries");
+const secondaryForceSyncSource = forceSyncSource(rst, secondary, primary);
+const testNodeForceSyncSource = forceSyncSource(rst, testNode, secondary);
+
 // Partition the nodes so that 'testNode' is in the same data center as the primary,
 const westDC = new DataCenter("westDC", [primary, testNode]);
 const eastDC = new DataCenter("eastDC", [secondary]);
 delayMessagesBetweenDataCenters(westDC, eastDC, 50 /* delayMillis */);
-
-jsTestLog("Forcing sync sources for the secondaries");
-const secondaryForceSyncSource = forceSyncSource(rst, secondary, primary);
-const testNodeForceSyncSource = forceSyncSource(rst, testNode, secondary);
 
 // Hang 'testNode' in the oplog fetcher to ensure that sync source candidates are ahead of us.
 const hangOplogFetcherBeforeAdvancingLastFetched =

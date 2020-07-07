@@ -46,6 +46,10 @@ using UserDouble = double;
 using UserString = std::string;
 
 struct CNode {
+    static auto noopLeaf() {
+        return CNode{Children{}};
+    }
+
     auto toString() const {
         return toStringHelper(0);
     }

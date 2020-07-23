@@ -65,8 +65,6 @@ public:
 
     std::string toString() const;
 
-    static BSONObj buildMajorityWaitRequest(Timestamp operationTime);
-
     Timestamp getOperationTime_forTest();
 
 protected:

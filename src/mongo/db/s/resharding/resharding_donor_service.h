@@ -63,13 +63,11 @@ public:
  * Represents the current state of a resharding donor operation on this shard. This class drives
  * state transitions and updates to underlying on-disk metadata.
  */
-class DonorStateMachine final
-    : public repl::PrimaryOnlyService::TypedInstance<ReshardingDonorService::Instance> {
+class DonorStateMachine final : public repl::PrimaryOnlyService::TypedInstance<DonorStateMachine> {
 public:
     explicit DonorStateMachine(const BSONObj& donorDoc);
 
-    virtual SemiFuture<void> run(
-        std::shared_ptr<executor::ScopedTaskExecutor> executor) noexcept override;
+    SemiFuture<void> run(std::shared_ptr<executor::ScopedTaskExecutor> executor) noexcept override;
 
     void onReshardingFieldsChanges(
         boost::optional<TypeCollectionReshardingFields> reshardingFields);

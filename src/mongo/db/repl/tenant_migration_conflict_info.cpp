@@ -39,7 +39,7 @@ namespace {
 
 MONGO_INIT_REGISTER_ERROR_EXTRA_INFO(TenantMigrationConflictInfo);
 
-constexpr StringData kDatabasePrefixFieldName = "dbPrefix"_sd;
+constexpr StringData kDatabasePrefixFieldName = "databasePrefix"_sd;
 
 }  // namespace
 

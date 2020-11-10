@@ -32,7 +32,7 @@
 #include <benchmark/benchmark.h>
 
 #include "mongo/base/string_data.h"
-#include "mongo/db/command_generic_argument.h"
+#include "mongo/idl/command_generic_argument.h"
 
 namespace mongo {
 namespace {

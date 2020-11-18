@@ -23,7 +23,7 @@ CreateShardedCollectionUtil.shardCollectionWithChunks(inputCollection, {oldKey: 
 
 const inputCollectionUUID =
     getUUIDFromListCollections(inputCollection.getDB(), inputCollection.getName());
-const inputCollectionUUIDString = inputCollectionUUID.toString().match(/UUID\("([^"]+)"\)/)[1];
+const inputCollectionUUIDString = extractUUIDFromObject(inputCollectionUUID);
 
 const temporaryReshardingCollection =
     st.s.getCollection(`reshardingDb.system.resharding.${inputCollectionUUIDString}`);

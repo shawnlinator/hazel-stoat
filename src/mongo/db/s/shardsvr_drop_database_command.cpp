@@ -94,9 +94,6 @@ public:
 
         void doCheckAuthorization(OperationContext*) const override {}
 
-        /**
-         * The ns() for when Request's IDL specifies "namespace: concatenate_with_db".
-         */
         NamespaceString ns() const override {
             return {"", ""};
         }

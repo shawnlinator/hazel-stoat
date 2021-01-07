@@ -30,6 +30,7 @@
 #pragma once
 
 #include "mongo/db/exec/sbe/expressions/expression.h"
+#include "mongo/db/exec/sbe/stages/lock_acquisition_callback.h"
 #include "mongo/db/exec/sbe/stages/stages.h"
 #include "mongo/db/exec/sbe/values/value.h"
 #include "mongo/db/query/query_solution.h"
@@ -58,6 +59,7 @@ std::pair<std::unique_ptr<sbe::PlanStage>, PlanStageSlots> generateCollScan(
     sbe::value::FrameIdGenerator* frameIdGenerator,
     PlanYieldPolicy* yieldPolicy,
     sbe::RuntimeEnvironment* env,
-    bool isTailableResumeBranch);
+    bool isTailableResumeBranch,
+    sbe::LockAcquisitionCallback lockAcquisitionCallback);
 
 }  // namespace mongo::stage_builder

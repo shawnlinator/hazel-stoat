@@ -61,7 +61,7 @@ long long countParseSkip(const BSONElement& element) {
 }
 
 long long countParseMaxTime(const BSONElement& element) {
-    auto maxTimeVal = uassertStatusOK(QueryRequest::parseMaxTimeMS(element));
+    auto maxTimeVal = uassertStatusOK(parseMaxTimeMS(element));
     return static_cast<long long>(maxTimeVal);
 }
 }  // namespace count_request

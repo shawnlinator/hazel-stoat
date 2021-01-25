@@ -45,7 +45,7 @@ void ValidateResults::appendToResultObj(BSONObjBuilder* resultObj, bool debuggin
     // Need to convert RecordId to int64_t to append to BSONObjBuilder
     BSONArrayBuilder builder;
     for (RecordId corruptRecord : corruptRecords) {
-        builder.append(corruptRecord.repr());
+        builder.append(corruptRecord.as<int64_t>());
     }
     resultObj->append("corruptRecords", builder.arr());
 

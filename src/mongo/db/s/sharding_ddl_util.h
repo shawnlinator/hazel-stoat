@@ -34,6 +34,12 @@ namespace mongo {
 namespace sharding_ddl_util {
 
 /**
+ * Erase collection metadata from config server and invalidate the locally cached once.
+ * In particular remove chunks, tags, and the description associated with the given namespace.
+ */
+void removeCollMetadataFromConfig(OperationContext* opCtx, NamespaceString nss);
+
+/**
  * Rename sharded collection metadata as part of a renameCollection operation.
  *
  * Transaction:

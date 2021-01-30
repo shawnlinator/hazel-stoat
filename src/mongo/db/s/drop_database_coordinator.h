@@ -29,9 +29,7 @@
 
 #pragma once
 
-#include "mongo/db/auth/user_name.h"
 #include "mongo/db/s/sharding_ddl_coordinator.h"
-#include "mongo/s/shard_id.h"
 
 namespace mongo {
 
@@ -44,8 +42,6 @@ private:
     SemiFuture<void> runImpl(std::shared_ptr<executor::TaskExecutor> executor) override;
 
     ServiceContext* _serviceContext;
-    std::vector<UserName> _users;
-    std::vector<RoleName> _roles;
 };
 
 }  // namespace mongo

@@ -46,10 +46,10 @@ var getQueryCollation = function(explainRes) {
         return explainRes.queryPlanner.collation;
     }
 
-    if (explainRes.queryPlanner.winningPlan.hasOwnProperty("shards") &&
-        explainRes.queryPlanner.winningPlan.shards.length > 0 &&
-        explainRes.queryPlanner.winningPlan.shards[0].hasOwnProperty("collation")) {
-        return explainRes.queryPlanner.winningPlan.shards[0].collation;
+    if (getWinningPlan(explainRes.queryPlanner).hasOwnProperty("shards") &&
+        getWinningPlan(explainRes.queryPlanner).shards.length > 0 &&
+        getWinningPlan(explainRes.queryPlanner).shards[0].hasOwnProperty("collation")) {
+        return getWinningPlan(explainRes.queryPlanner).shards[0].collation;
     }
 
     return null;
@@ -270,17 +270,17 @@ if (db.getMongo().useReadCommands()) {
     // Query has simple collation, but index has fr_CA collation.
     explainRes = coll.find({a: "foo"}).explain();
     assert.commandWorked(explainRes);
-    assert(planHasStage(db, explainRes.queryPlanner.winningPlan, "COLLSCAN"));
+    assert(planHasStage(db, getWinningPlan(explainRes.queryPlanner), "COLLSCAN"));
 
     // Query has en_US collation, but index has fr_CA collation.
     explainRes = coll.find({a: "foo"}).collation({locale: "en_US"}).explain();
     assert.commandWorked(explainRes);
-    assert(planHasStage(db, explainRes.queryPlanner.winningPlan, "COLLSCAN"));
+    assert(planHasStage(db, getWinningPlan(explainRes.queryPlanner), "COLLSCAN"));
 
     // Matching collations.
     explainRes = coll.find({a: "foo"}).collation({locale: "fr_CA"}).explain();
     assert.commandWorked(explainRes);
-    assert(planHasStage(db, explainRes.queryPlanner.winningPlan, "IXSCAN"));
+    assert(planHasStage(db, getWinningPlan(explainRes.queryPlanner), "IXSCAN"));
 }
 
 // Should not be possible to create a text index with an explicit non-simple collation.
@@ -338,7 +338,7 @@ coll.drop();
 assert.commandWorked(db.createCollection(coll.getName(), {collation: {locale: "en_US"}}));
 assert.commandWorked(coll.createIndex({a: 1}, {collation: {locale: "en_US"}}));
 var explain = coll.explain("queryPlanner").aggregate([{$match: {a: "foo"}}]);
-assert(isIxscan(db, explain.queryPlanner.winningPlan));
+assert(isIxscan(db, getWinningPlan(explain.queryPlanner)));
 
 // Aggregation should not use index when no collation specified and collection default
 // collation is incompatible with index collation.
@@ -346,7 +346,7 @@ coll.drop();
 assert.commandWorked(db.createCollection(coll.getName(), {collation: {locale: "en_US"}}));
 assert.commandWorked(coll.createIndex({a: 1}, {collation: {locale: "simple"}}));
 var explain = coll.explain("queryPlanner").aggregate([{$match: {a: "foo"}}]);
-assert(isCollscan(db, explain.queryPlanner.winningPlan));
+assert(isCollscan(db, getWinningPlan(explain.queryPlanner)));
 
 // Explain of aggregation with collation should succeed.
 assert.commandWorked(coll.explain().aggregate([], {collation: {locale: "fr"}}));
@@ -508,28 +508,28 @@ coll.drop();
 assert.commandWorked(db.createCollection(coll.getName(), {collation: {locale: "en_US"}}));
 assert.commandWorked(coll.createIndex({a: 1}, {collation: {locale: "en_US"}}));
 var explain = coll.explain("queryPlanner").distinct("a");
-assert(planHasStage(db, explain.queryPlanner.winningPlan, "DISTINCT_SCAN"));
-assert(planHasStage(db, explain.queryPlanner.winningPlan, "FETCH"));
+assert(planHasStage(db, getWinningPlan(explain.queryPlanner), "DISTINCT_SCAN"));
+assert(planHasStage(db, getWinningPlan(explain.queryPlanner), "FETCH"));
 
 // Distinct scan on strings can be used over an index with a collation when the predicate has
 // exact bounds.
 explain = coll.explain("queryPlanner").distinct("a", {a: {$gt: "foo"}});
-assert(planHasStage(db, explain.queryPlanner.winningPlan, "DISTINCT_SCAN"));
-assert(planHasStage(db, explain.queryPlanner.winningPlan, "FETCH"));
-assert(!planHasStage(db, explain.queryPlanner.winningPlan, "PROJECTION_COVERED"));
+assert(planHasStage(db, getWinningPlan(explain.queryPlanner), "DISTINCT_SCAN"));
+assert(planHasStage(db, getWinningPlan(explain.queryPlanner), "FETCH"));
+assert(!planHasStage(db, getWinningPlan(explain.queryPlanner), "PROJECTION_COVERED"));
 
 // Distinct scan cannot be used over an index with a collation when the predicate has inexact
 // bounds.
 explain = coll.explain("queryPlanner").distinct("a", {a: {$exists: true}});
-assert(planHasStage(db, explain.queryPlanner.winningPlan, "IXSCAN"));
-assert(planHasStage(db, explain.queryPlanner.winningPlan, "FETCH"));
-assert(!planHasStage(db, explain.queryPlanner.winningPlan, "DISTINCT_SCAN"));
+assert(planHasStage(db, getWinningPlan(explain.queryPlanner), "IXSCAN"));
+assert(planHasStage(db, getWinningPlan(explain.queryPlanner), "FETCH"));
+assert(!planHasStage(db, getWinningPlan(explain.queryPlanner), "DISTINCT_SCAN"));
 
 // Distinct scan can be used without a fetch when predicate has exact non-string bounds.
 explain = coll.explain("queryPlanner").distinct("a", {a: {$gt: 3}});
-assert(planHasStage(db, explain.queryPlanner.winningPlan, "DISTINCT_SCAN"));
-assert(planHasStage(db, explain.queryPlanner.winningPlan, "PROJECTION_COVERED"));
-assert(!planHasStage(db, explain.queryPlanner.winningPlan, "FETCH"));
+assert(planHasStage(db, getWinningPlan(explain.queryPlanner), "DISTINCT_SCAN"));
+assert(planHasStage(db, getWinningPlan(explain.queryPlanner), "PROJECTION_COVERED"));
+assert(!planHasStage(db, getWinningPlan(explain.queryPlanner), "FETCH"));
 
 // Distinct should not use index when no collation specified and collection default collation is
 // incompatible with index collation.
@@ -537,7 +537,7 @@ coll.drop();
 assert.commandWorked(db.createCollection(coll.getName(), {collation: {locale: "en_US"}}));
 assert.commandWorked(coll.createIndex({a: 1}, {collation: {locale: "simple"}}));
 var explain = coll.explain("queryPlanner").distinct("a");
-assert(isCollscan(db, explain.queryPlanner.winningPlan));
+assert(isCollscan(db, getWinningPlan(explain.queryPlanner)));
 
 // Explain of DISTINCT_SCAN stage should include index collation.
 coll.drop();
@@ -749,7 +749,7 @@ coll.drop();
 assert.commandWorked(db.createCollection(coll.getName(), {collation: {locale: "en_US"}}));
 assert.commandWorked(coll.createIndex({a: 1}, {collation: {locale: "en_US"}}));
 var explain = coll.find({a: "foo"}).explain("queryPlanner");
-assert(isIxscan(db, explain.queryPlanner.winningPlan));
+assert(isIxscan(db, getWinningPlan(explain.queryPlanner)));
 
 // Find should select compatible index when no collation specified and collection default
 // collation is "simple".
@@ -757,7 +757,7 @@ coll.drop();
 assert.commandWorked(db.createCollection(coll.getName(), {collation: {locale: "simple"}}));
 assert.commandWorked(coll.createIndex({a: 1}, {collation: {locale: "simple"}}));
 var explain = coll.find({a: "foo"}).explain("queryPlanner");
-assert(isIxscan(db, explain.queryPlanner.winningPlan));
+assert(isIxscan(db, getWinningPlan(explain.queryPlanner)));
 
 // Find should not use index when no collation specified, index collation is "simple", and
 // collection has a non-"simple" default collation.
@@ -765,7 +765,7 @@ coll.drop();
 assert.commandWorked(db.createCollection(coll.getName(), {collation: {locale: "en_US"}}));
 assert.commandWorked(coll.createIndex({a: 1}, {collation: {locale: "simple"}}));
 var explain = coll.find({a: "foo"}).explain("queryPlanner");
-assert(isCollscan(db, explain.queryPlanner.winningPlan));
+assert(isCollscan(db, getWinningPlan(explain.queryPlanner)));
 
 // Find should select compatible index when "simple" collation specified and collection has a
 // non-"simple" default collation.
@@ -773,7 +773,7 @@ coll.drop();
 assert.commandWorked(db.createCollection(coll.getName(), {collation: {locale: "en_US"}}));
 assert.commandWorked(coll.createIndex({a: 1}, {collation: {locale: "simple"}}));
 var explain = coll.find({a: "foo"}).collation({locale: "simple"}).explain("queryPlanner");
-assert(isIxscan(db, explain.queryPlanner.winningPlan));
+assert(isIxscan(db, getWinningPlan(explain.queryPlanner)));
 
 // Find should return correct results when collation specified and run with explain.
 coll.drop();
@@ -1920,7 +1920,7 @@ if (db.getMongo().useReadCommands()) {
                      .sort({a: 1, b: 1})
                      .explain();
     assert.commandWorked(explainRes);
-    assert(planHasStage(db, explainRes.queryPlanner.winningPlan, "SORT"));
+    assert(planHasStage(db, getWinningPlan(explainRes.queryPlanner), "SORT"));
 
     // This query should fail since min has a string as one of it's boundaries, and the
     // collation doesn't match that of the index.

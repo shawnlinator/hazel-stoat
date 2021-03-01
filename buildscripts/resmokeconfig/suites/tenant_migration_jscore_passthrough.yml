@@ -67,6 +67,7 @@ selector:
   - jstests/core/bulk_api_unordered.js
   - jstests/core/fts_querylang.js
   - jstests/core/idhack.js
+  - jstests/core/index_arr2.js
   - jstests/core/role_management_helpers.js
   - jstests/core/roles_info.js
   - jstests/core/server1470.js

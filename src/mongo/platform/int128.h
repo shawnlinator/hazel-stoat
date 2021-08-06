@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include <absl/numeric/int128.h>
 
-using uint128_t = boost::multiprecision::uint128_t;
-using int128_t = boost::multiprecision::int128_t;
+using uint128_t = absl::uint128;
+using int128_t = absl::int128;

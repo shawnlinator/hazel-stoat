@@ -66,7 +66,7 @@ FaultState FaultManager::getFaultState() const {
     return FaultState::kOk;
 }
 
-boost::optional<FaultManager::FaultConstPtr> FaultManager::activeFault() const {
+boost::optional<FaultConstPtr> FaultManager::activeFault() const {
     return {};
 }
 

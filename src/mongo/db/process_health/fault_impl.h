@@ -32,7 +32,6 @@
 
 #include "mongo/db/service_context.h"
 #include "mongo/util/clock_source.h"
-#include "mongo/util/system_clock_source.h"
 #include "mongo/util/timer.h"
 
 namespace mongo {

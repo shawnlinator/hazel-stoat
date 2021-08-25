@@ -29,6 +29,7 @@
 
 #include "mongo/db/process_health/health_observer.h"
 
+#include "mongo/db/process_health/fault_manager_test_suite.h"
 #include "mongo/db/process_health/health_observer_mock.h"
 #include "mongo/db/process_health/health_observer_registration.h"
 #include "mongo/db/service_context.h"
@@ -38,33 +39,25 @@ namespace mongo {
 
 namespace process_health {
 
+// Using the common fault manager test suite.
+using test::FaultManagerTest;
+
 namespace {
 
-class HealthObserverTest : public unittest::Test {
-public:
-    void setUp() override {
-        _svcCtx = ServiceContext::make();
-    }
-
-    void registerMock() {
-        HealthObserverRegistration* reg = HealthObserverRegistration::get(_svcCtx.get());
-        reg->registerObserverFactory(
-            [](ServiceContext* svcCtx) { return std::make_unique<HealthObserverMock>(svcCtx); });
-    }
-
-    HealthObserverRegistration* registration() {
-        return HealthObserverRegistration::get(_svcCtx.get());
-    }
-
-private:
-    ServiceContext::UniqueServiceContext _svcCtx;
-};
-
-TEST_F(HealthObserverTest, Registration) {
-    registerMock();
-    auto allObservers = registration()->instantiateAllObservers();
+TEST_F(FaultManagerTest, Registration) {
+    registerMockHealthObserver([] { return 0; });
+    auto allObservers = healthObserverRegistration().instantiateAllObservers();
     ASSERT_EQ(1, allObservers.size());
     ASSERT_EQ(FaultFacetType::kMock, allObservers[0]->getType());
+}
+
+TEST_F(FaultManagerTest, HealthCheckCreatesObservers) {
+    registerMockHealthObserver([] { return 0.1; });
+    ASSERT_EQ(0, manager().getHealthObserversTest().size());
+
+    // Trigger periodic health check.
+    manager().healthCheckTest();
+    ASSERT_EQ(1, manager().getHealthObserversTest().size());
 }
 
 }  // namespace

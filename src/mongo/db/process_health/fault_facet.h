@@ -38,9 +38,11 @@ namespace process_health {
  * The instance is created and deleted by the fault observer when a fault
  * condition is detected or resolved.
  */
-class FaultFacet {
+class FaultFacet : public std::enable_shared_from_this<FaultFacet> {
 public:
     virtual ~FaultFacet() = default;
+
+    virtual FaultFacetType getType() const = 0;
 
     /**
      * The interface used to communicate with the Fault instance that
@@ -50,6 +52,8 @@ public:
      */
     virtual HealthCheckStatus getStatus() const = 0;
 };
+
+using FaultFacetPtr = std::shared_ptr<FaultFacet>;
 
 }  // namespace process_health
 }  // namespace mongo

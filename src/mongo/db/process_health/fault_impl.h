@@ -32,6 +32,7 @@
 
 #include "mongo/db/service_context.h"
 #include "mongo/util/clock_source.h"
+#include "mongo/util/duration.h"
 #include "mongo/util/timer.h"
 
 namespace mongo {
@@ -41,9 +42,11 @@ namespace process_health {
  * Internal implementation of the Fault class.
  * @see Fault
  */
-class FaultImpl : public Fault {
+class FaultImpl : public FaultInternal {
 public:
-    explicit FaultImpl(ServiceContext* svcCtx);
+    explicit FaultImpl(ServiceContext* svcCtx,
+                       Milliseconds minimalGarbageCollectTimeout =
+                           FaultFacetContainer::kMinimalFacetLifetimeToDelete);
 
     ~FaultImpl() override = default;
 
@@ -59,10 +62,29 @@ public:
 
     void appendDescription(BSONObjBuilder* builder) const override;
 
+    // FaultFacetContainer interface.
+
+    std::vector<FaultFacetPtr> getFacets() const override;
+
+    boost::optional<FaultFacetPtr> getFaultFacet(FaultFacetType type) override;
+
+    FaultFacetPtr getOrCreateFaultFacet(FaultFacetType type,
+                                        std::function<FaultFacetPtr()> createCb) override;
+
+    void garbageCollectResolvedFacets() override;
+
 private:
-    ServiceContext* const _svcCtx;
     const UUID _id = UUID::gen();
+
+    ServiceContext* const _svcCtx;
+    // A resolved instance of facet can be garbage collected only after this timeout.
+    const Milliseconds _minimalGarbageCollectTimeout;
     const Date_t _startTime;
+
+    mutable Mutex _mutex = MONGO_MAKE_LATCH(HierarchicalAcquisitionLevel(0), "FaultImpl::_mutex");
+    // We don't need a map by type because we expect to have only few facets.
+    // Linear search is much faster, we want to avoid any lock contention here.
+    std::deque<FaultFacetPtr> _facets;
 };
 
 }  // namespace process_health

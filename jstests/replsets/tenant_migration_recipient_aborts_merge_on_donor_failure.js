@@ -26,6 +26,7 @@ load("jstests/replsets/libs/tenant_migration_util.js");
 
     if (!TenantMigrationUtil.isShardMergeEnabled(recipientPrimary.getDB("admin"))) {
         tenantMigrationTest.stop();
+        jsTestLog("Skipping Shard Merge-specific test");
         return;
     }
 
@@ -56,11 +57,12 @@ load("jstests/replsets/libs/tenant_migration_util.js");
     waitInFailPoint.wait();
     jsTestLog("Stopping the donor primary");
     donorRst.stop(donorPrimary);
-    waitInFailPoint.off();
 
     // wait until the completion path has started after the abort
     const hangBeforeTaskCompletion =
         configureFailPoint(recipientPrimary, "hangBeforeTaskCompletion", {action: "hang"});
+
+    waitInFailPoint.off();
     hangBeforeTaskCompletion.wait();
 
     // step up a secondary so that the migration will complete and the

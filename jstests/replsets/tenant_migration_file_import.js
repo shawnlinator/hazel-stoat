@@ -27,9 +27,7 @@ load("jstests/libs/uuid_util.js");
 load("jstests/replsets/libs/tenant_migration_test.js");
 
 const migrationId = UUID();
-// TODO (SERVER-61773): Don't set minSnapshotHistoryWindowInSeconds.
-const tenantMigrationTest = new TenantMigrationTest(
-    {name: jsTestName(), sharedOptions: {setParameter: {minSnapshotHistoryWindowInSeconds: 0}}});
+const tenantMigrationTest = new TenantMigrationTest({name: jsTestName()});
 const donorPrimary = tenantMigrationTest.getDonorPrimary();
 const recipientPrimary = tenantMigrationTest.getRecipientPrimary();
 const kDataDir =

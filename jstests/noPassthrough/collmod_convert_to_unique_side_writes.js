@@ -49,7 +49,7 @@ const countUnique = function(coll, key) {
 
 /**
  * Starts and pauses a unique index conversion in the collection.
- * While the 'collMod' command in paused, runs 'doCrudOpsFunc' before resuming the
+ * While the 'collMod' command in paused, runs 'performCrudOpsFunc' before resuming the
  * conversion process. Confirms expected 'collMod' behavior.
  */
 const testCollModConvertUniqueWithSideWrites = function(performCrudOpsFunc, expectedViolations) {

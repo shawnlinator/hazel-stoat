@@ -7,17 +7,18 @@
 #define js_confdefs_h
 
 // Expands to all the defines from configure.
-#define CPP_THROW_NEW throw()
 #define CROSS_COMPILE 
-#define EDITLINE 1
+#define ENABLE_SHARED_MEMORY 1
+#define ENABLE_WASM_SIMD 1
+#define ENABLE_WASM_SIMD_WORMHOLE 1
 #define HAVE_64BIT_BUILD 1
 #define HAVE_ALLOCA_H 1
 #define HAVE_BYTESWAP_H 1
 #define HAVE_CLOCK_MONOTONIC 1
-#define HAVE_CPP_DYNAMIC_CAST_TO_VOID_PTR 1
 #define HAVE_CPUID_H 1
 #define HAVE_DIRENT_H 1
 #define HAVE_DLOPEN 1
+#define HAVE_FTS_H 1
 #define HAVE_GETC_UNLOCKED 1
 #define HAVE_GETOPT_H 1
 #define HAVE_GMTIME_R 1
@@ -33,6 +34,7 @@
 #define HAVE_MALLOC_H 1
 #define HAVE_MALLOC_USABLE_SIZE 1
 #define HAVE_MEMALIGN 1
+#define HAVE_MEMFD_CREATE 1
 #define HAVE_NETINET_IN_H 1
 #define HAVE_NL_TYPES_H 1
 #define HAVE_POSIX_FADVISE 1
@@ -40,7 +42,6 @@
 #define HAVE_POSIX_MEMALIGN 1
 #define HAVE_PTHREAD_GETNAME_NP 1
 #define HAVE_RES_NINIT 1
-#define HAVE_SINCOS 1
 #define HAVE_SSIZE_T 1
 #define HAVE_STDINT_H 1
 #define HAVE_STRNDUP 1
@@ -63,30 +64,29 @@
 #define JS_64BIT 1
 #define JS_CODEGEN_X64 1
 #define JS_DEFAULT_JITREPORT_GRANULARITY 3
-#define JS_POSIX_NSPR 1
 #define JS_PUNBOX64 1
 #define JS_STANDALONE 1
+#define JS_WITHOUT_NSPR 1
 #define MALLOC_H <malloc.h>
 #define MALLOC_USABLE_SIZE_CONST_PTR 
-#define MOZILLA_UAVERSION "60.0"
-#define MOZILLA_VERSION "60.3.0"
-#define MOZILLA_VERSION_U 60.3.0
-#define MOZJS_MAJOR_VERSION 60
-#define MOZJS_MINOR_VERSION 3
+#define MOZILLA_UAVERSION "91.0"
+#define MOZILLA_VERSION "91.4.0"
+#define MOZILLA_VERSION_U 91.4.0
+#define MOZJS_MAJOR_VERSION 91
+#define MOZJS_MINOR_VERSION 4
+#define MOZ_AARCH64_JSCVT 0
 #define MOZ_BUILD_APP js
+#define MOZ_DLL_PREFIX "lib"
 #define MOZ_DLL_SUFFIX ".so"
-#define MOZ_GLUE_IN_PROGRAM 1
-#define MOZ_MEMORY 1
 #define MOZ_UPDATE_CHANNEL default
 #define NO_NSPR_10_SUPPORT 1
+#define NO_RUST_PANIC_HOOK 1
 #define RELEASE_OR_BETA 1
 #define STDC_HEADERS 1
+#define U_STATIC_IMPLEMENTATION 1
 #define VA_COPY va_copy
 #define XP_LINUX 1
 #define XP_UNIX 1
-#define X_DISPLAY_MISSING 1
 #define _REENTRANT 1
-
-#include "js/RequiredDefines.h"
 
 #endif /* js_confdefs_h */

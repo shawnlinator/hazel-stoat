@@ -1,55 +1,55 @@
 #define MOZ_UNIFIED_BUILD
-#include "jit/arm64/vixl/Instrument-vixl.cpp"
+#include "vm/StructuredClone.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/arm64/vixl/Instrument-vixl.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/StructuredClone.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/arm64/vixl/Instrument-vixl.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/StructuredClone.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jit/arm64/vixl/MacroAssembler-vixl.cpp"
+#include "vm/SymbolType.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/arm64/vixl/MacroAssembler-vixl.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/SymbolType.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/arm64/vixl/MacroAssembler-vixl.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/SymbolType.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jit/arm64/vixl/MozAssembler-vixl.cpp"
+#include "vm/TaggedProto.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/arm64/vixl/MozAssembler-vixl.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/TaggedProto.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/arm64/vixl/MozAssembler-vixl.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/TaggedProto.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jit/arm64/vixl/MozInstructions-vixl.cpp"
+#include "vm/ThrowMsgKind.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/arm64/vixl/MozInstructions-vixl.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/ThrowMsgKind.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/arm64/vixl/MozInstructions-vixl.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/ThrowMsgKind.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jit/arm64/vixl/Utils-vixl.cpp"
+#include "vm/Time.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/arm64/vixl/Utils-vixl.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/Time.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/arm64/vixl/Utils-vixl.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/Time.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jit/shared/Assembler-shared.cpp"
+#include "vm/ToSource.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/shared/Assembler-shared.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/ToSource.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/shared/Assembler-shared.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/ToSource.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif

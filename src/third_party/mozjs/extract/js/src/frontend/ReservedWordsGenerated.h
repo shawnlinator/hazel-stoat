@@ -1,5 +1,5 @@
     /*
-     * Generating switch for the list of 53 entries:
+     * Generating switch for the list of 54 entries:
      * false
      * true
      * null
@@ -48,6 +48,7 @@
      * from
      * get
      * let
+     * meta
      * of
      * set
      * static
@@ -62,7 +63,7 @@
                 JSRW_GOT_MATCH(16) /* if */
             }
             if (JSRW_AT(0) == 'o') {
-                JSRW_GOT_MATCH(48) /* of */
+                JSRW_GOT_MATCH(49) /* of */
             }
             JSRW_NO_MATCH()
           case 'n':
@@ -107,7 +108,7 @@
                     JSRW_GOT_MATCH(47) /* let */
                 }
                 if (JSRW_AT(0) == 's') {
-                    JSRW_GOT_MATCH(49) /* set */
+                    JSRW_GOT_MATCH(50) /* set */
                 }
                 JSRW_NO_MATCH()
             }
@@ -165,8 +166,17 @@
             }
             JSRW_NO_MATCH()
           case 't':
-            if (JSRW_AT(0)=='w' && JSRW_AT(1)=='i' && JSRW_AT(3)=='h') {
-                JSRW_GOT_MATCH(29) /* with */
+            if (JSRW_AT(0) == 'm') {
+                if (JSRW_AT(3)=='a' && JSRW_AT(1)=='e') {
+                    JSRW_GOT_MATCH(48) /* meta */
+                }
+                JSRW_NO_MATCH()
+            }
+            if (JSRW_AT(0) == 'w') {
+                if (JSRW_AT(3)=='h' && JSRW_AT(1)=='i') {
+                    JSRW_GOT_MATCH(29) /* with */
+                }
+                JSRW_NO_MATCH()
             }
             JSRW_NO_MATCH()
           case 'u':
@@ -216,7 +226,7 @@
             }
             if (JSRW_AT(0) == 'y') {
                 if (JSRW_AT(4)=='d' && JSRW_AT(1)=='i' && JSRW_AT(2)=='e') {
-                    JSRW_GOT_MATCH(52) /* yield */
+                    JSRW_GOT_MATCH(53) /* yield */
                 }
                 JSRW_NO_MATCH()
             }
@@ -271,7 +281,7 @@
           case 's':
             if (JSRW_AT(1) == 't') {
                 if (JSRW_AT(5)=='c' && JSRW_AT(4)=='i' && JSRW_AT(2)=='a' && JSRW_AT(3)=='t') {
-                    JSRW_GOT_MATCH(50) /* static */
+                    JSRW_GOT_MATCH(51) /* static */
                 }
                 JSRW_NO_MATCH()
             }
@@ -291,7 +301,7 @@
             }
             if (JSRW_AT(5) == 't') {
                 if (JSRW_AT(4)=='e' && JSRW_AT(1)=='a' && JSRW_AT(2)=='r' && JSRW_AT(3)=='g') {
-                    JSRW_GOT_MATCH(51) /* target */
+                    JSRW_GOT_MATCH(52) /* target */
                 }
                 JSRW_NO_MATCH()
             }

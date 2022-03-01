@@ -1,55 +1,37 @@
 #define MOZ_UNIFIED_BUILD
-#include "jsdate.cpp"
+#include "vm/Warnings.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jsdate.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/Warnings.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jsdate.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/Warnings.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jsexn.cpp"
+#include "vm/WellKnownAtom.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jsexn.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/WellKnownAtom.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jsexn.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/WellKnownAtom.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jsfriendapi.cpp"
+#include "vm/WindowProxy.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jsfriendapi.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/WindowProxy.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jsfriendapi.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/WindowProxy.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jsnum.cpp"
+#include "vm/Xdr.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jsnum.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/Xdr.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jsnum.cpp defines INITGUID, so it cannot be built in unified mode."
-#undef INITGUID
-#endif
-#include "perf/jsperf.cpp"
-#ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "perf/jsperf.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
-#undef PL_ARENA_CONST_ALIGN_MASK
-#endif
-#ifdef INITGUID
-#error "perf/jsperf.cpp defines INITGUID, so it cannot be built in unified mode."
-#undef INITGUID
-#endif
-#include "proxy/BaseProxyHandler.cpp"
-#ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "proxy/BaseProxyHandler.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
-#undef PL_ARENA_CONST_ALIGN_MASK
-#endif
-#ifdef INITGUID
-#error "proxy/BaseProxyHandler.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/Xdr.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif

@@ -1,55 +1,55 @@
 #define MOZ_UNIFIED_BUILD
-#include "jit/shared/BaselineCompiler-shared.cpp"
+#include "vm/TypedArrayObject.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/shared/BaselineCompiler-shared.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/TypedArrayObject.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/shared/BaselineCompiler-shared.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/TypedArrayObject.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jit/shared/CodeGenerator-shared.cpp"
+#include "vm/UbiNode.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/shared/CodeGenerator-shared.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/UbiNode.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/shared/CodeGenerator-shared.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/UbiNode.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jit/shared/Disassembler-shared.cpp"
+#include "vm/UbiNodeCensus.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/shared/Disassembler-shared.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/UbiNodeCensus.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/shared/Disassembler-shared.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/UbiNodeCensus.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jit/shared/Lowering-shared.cpp"
+#include "vm/UbiNodeShortestPaths.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jit/shared/Lowering-shared.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/UbiNodeShortestPaths.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jit/shared/Lowering-shared.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/UbiNodeShortestPaths.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jsapi.cpp"
+#include "vm/UsageStatistics.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jsapi.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/UsageStatistics.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jsapi.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/UsageStatistics.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif
-#include "jsbool.cpp"
+#include "vm/Value.cpp"
 #ifdef PL_ARENA_CONST_ALIGN_MASK
-#error "jsbool.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
+#error "vm/Value.cpp uses PL_ARENA_CONST_ALIGN_MASK, so it cannot be built in unified mode."
 #undef PL_ARENA_CONST_ALIGN_MASK
 #endif
 #ifdef INITGUID
-#error "jsbool.cpp defines INITGUID, so it cannot be built in unified mode."
+#error "vm/Value.cpp defines INITGUID, so it cannot be built in unified mode."
 #undef INITGUID
 #endif

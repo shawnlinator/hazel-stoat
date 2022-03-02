@@ -46,9 +46,15 @@ public:
                        bool unique,
                        ShardingDataTransformCumulativeMetrics* cumulativeMetrics);
 
+    static std::unique_ptr<GlobalIndexMetrics> makeInstance(UUID uuid,
+                                                            NamespaceString nss,
+                                                            Role role,
+                                                            BSONObj keyPattern,
+                                                            bool unique,
+                                                            ServiceContext* serviceContext);
+
 private:
     std::string createOperationDescription() const noexcept override;
-    BSONObj _shardKey;
 };
 
 }  // namespace mongo

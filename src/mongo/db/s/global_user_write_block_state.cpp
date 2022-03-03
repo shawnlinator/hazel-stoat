@@ -60,7 +60,9 @@ void GlobalUserWriteBlockState::disableUserWriteBlocking(OperationContext* opCtx
 void GlobalUserWriteBlockState::checkUserWritesAllowed(OperationContext* opCtx,
                                                        const NamespaceString& nss) const {
     invariant(opCtx->lockState()->isLocked());
-    uassert(ErrorCodes::OperationFailed, "User writes blocked", !_globalUserWritesBlocked);
+    uassert(ErrorCodes::OperationFailed,
+            "User writes blocked",
+            !_globalUserWritesBlocked || nss.isOnInternalDb());
 }
 
 }  // namespace mongo

@@ -48,6 +48,10 @@ struct ClusterFindCmdS {
         uassertStatusOK(
             auth::checkAuthForFind(AuthorizationSession::get(opCtx->getClient()), nss, hasTerm));
     }
+
+    static void checkCanRunHere(OperationContext* opCtx) {
+        // Can always run on a mongos.
+    }
 };
 ClusterFindCmdBase<ClusterFindCmdS> clusterFindCmdS;
 

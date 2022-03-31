@@ -43,11 +43,13 @@ namespace {
 
 StringMap<std::string> clusterCommandTranslations = {
     {"abortTransaction", "clusterAbortTransaction"},
+    {"aggregate", "clusterAggregate"},
     {"commitTransaction", "clusterCommitTransaction"},
     {"delete", "clusterDelete"},
+    {"find", "clusterFind"},
+    {"getMore", "clusterGetMore"},
     {"insert", "clusterInsert"},
-    {"update", "clusterUpdate"},
-    {"find", "clusterFind"}};
+    {"update", "clusterUpdate"}};
 
 BSONObj replaceCommandNameWithClusterCommandName(BSONObj cmdObj) {
     auto cmdName = cmdObj.firstElement().fieldNameStringData();

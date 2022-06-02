@@ -26,9 +26,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "src/main/test.h"
-
-using namespace test_harness;
+#include "test_harness/test.h"
 
 /*
  * The "base test" that the framework uses, because its not overloading any of the database
@@ -36,9 +34,9 @@ using namespace test_harness;
  *
  * Can be used to create stress tests in various ways.
  */
-class operations_test : public test {
+class operations_test : public test_harness::test {
     public:
-    operations_test(const test_args &args) : test(args)
+    operations_test(const test_harness::test_args &args) : test(args)
     {
         init_tracking();
     }

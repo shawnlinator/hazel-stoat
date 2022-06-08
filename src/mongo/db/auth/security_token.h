@@ -62,10 +62,10 @@ BSONObj signSecurityToken(BSONObj obj);
 SecurityToken verifySecurityToken(BSONObj obj);
 
 /**
- * Parse any SecurityToken from the OpMsg and place it as a decoration
- * on OperationContext
+ * Parse the validated SecurityToken from the OpMsg and place it as a decoration
+ * on OperationContext.
  */
-void readSecurityTokenMetadata(OperationContext* opCtx, BSONObj securityToken);
+void setSecurityToken(OperationContext* opCtx, const OpMsg& opMsg);
 
 /**
  * Retrieve the Security Token associated with this operation context

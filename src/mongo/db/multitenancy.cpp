@@ -45,37 +45,6 @@ namespace mongo {
 const auto dollarTenantDecoration =
     OperationContext::declareDecoration<boost::optional<mongo::TenantId>>();
 
-void parseDollarTenantFromRequest(OperationContext* opCtx, const OpMsg& request) {
-    // The internal security user is allowed to run commands on behalf of a tenant by passing
-    // the tenantId in the "$tenant" field.
-    auto tenantElem = request.body["$tenant"];
-    if (!tenantElem)
-        return;
-
-    uassert(ErrorCodes::InvalidOptions,
-            "Multitenancy not enabled, cannot set $tenant in command body",
-            gMultitenancySupport);
-
-    uassert(ErrorCodes::Unauthorized,
-            "'$tenant' may only be specified with the useTenant action type",
-            AuthorizationSession::get(opCtx->getClient())
-                ->isAuthorizedForActionsOnResource(ResourcePattern::forClusterResource(),
-                                                   ActionType::useTenant));
-
-    auto tenantId = TenantId::parseFromBSON(tenantElem);
-
-    uassert(6223901,
-            str::stream() << "Cannot pass $tenant id if also passing securityToken, securityToken: "
-                          << auth::getSecurityToken(opCtx)->getAuthenticatedUser().getTenant()
-                          << " $tenant: " << tenantId,
-            !auth::getSecurityToken(opCtx));
-
-
-    dollarTenantDecoration(opCtx) = std::move(tenantId);
-    LOGV2_DEBUG(
-        6223900, 4, "Setting tenantId from $tenant request parameter", "tenantId"_attr = tenantId);
-}
-
 boost::optional<TenantId> getActiveTenant(OperationContext* opCtx) {
     auto token = auth::getSecurityToken(opCtx);
     if (!token) {
@@ -84,6 +53,18 @@ boost::optional<TenantId> getActiveTenant(OperationContext* opCtx) {
 
     invariant(!dollarTenantDecoration(opCtx));
     return token->getAuthenticatedUser().getTenant();
+}
+
+void setDollarTenantOnOpCtx(OperationContext* opCtx, const OpMsg& opMsg) {
+    if (!opMsg.validatedTenant || !opMsg.validatedTenant->tenantId()) {
+        return;
+    }
+
+    if (opMsg.securityToken.nFields() > 0) {
+        return;
+    }
+
+    dollarTenantDecoration(opCtx) = opMsg.validatedTenant->tenantId();
 }
 
 }  // namespace mongo

@@ -30,7 +30,7 @@
 #include <string>
 
 #include "mongo/db/commands.h"
-#include "mongo/db/commands/analyze_command_gen.h"
+#include "mongo/db/query/analyze_command_gen.h"
 #include "mongo/db/query/query_feature_flags_gen.h"
 
 namespace mongo {
@@ -67,8 +67,10 @@ public:
         void typedRun(OperationContext* opCtx) {
             uassert(6660400,
                     "Analyze command requires common query framework feature flag to be enabled",
-                    feature_flags::gFeatureFlagCommonQueryFramework.isEnabled(
-                        serverGlobalParams.featureCompatibility));
+                    serverGlobalParams.featureCompatibility.isVersionInitialized() &&
+                        feature_flags::gFeatureFlagCommonQueryFramework.isEnabled(
+                            serverGlobalParams.featureCompatibility));
+
             uasserted(ErrorCodes::NotImplemented, "Analyze command not yet implemented");
         }
 

@@ -61,7 +61,7 @@ public:
      * HostAndPort. Allows the targeter to update its view of the cluster's topology if network
      * or shutdown errors are recieved.
      */
-    virtual void onRemoteCommandError(HostAndPort h, Status s) = 0;
+    virtual SemiFuture<void> onRemoteCommandError(HostAndPort h, Status s) = 0;
 };
 
 class RemoteCommandLocalHostTargeter : public RemoteCommandHostTargeter {
@@ -75,7 +75,9 @@ public:
         return SemiFuture<std::vector<HostAndPort>>::makeReady(hostList);
     }
 
-    void onRemoteCommandError(HostAndPort h, Status s) override final {}
+    SemiFuture<void> onRemoteCommandError(HostAndPort h, Status s) override final {
+        return SemiFuture<void>::makeReady();
+    }
 };
 
 /**
@@ -92,7 +94,9 @@ public:
         return SemiFuture<std::vector<HostAndPort>>::makeReady(hostList);
     }
 
-    void onRemoteCommandError(HostAndPort h, Status s) override final {}
+    SemiFuture<void> onRemoteCommandError(HostAndPort h, Status s) override final {
+        return SemiFuture<void>::makeReady();
+    }
 
 private:
     HostAndPort _host;

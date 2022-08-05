@@ -34,7 +34,7 @@
 
 namespace mongo::ce {
 
-using Histograms = std::map<std::string, std::unique_ptr<ArrayHistogram>>;
+using Histograms = std::map<std::string, std::shared_ptr<ArrayHistogram>>;
 
 class CollectionStatistics {
 public:

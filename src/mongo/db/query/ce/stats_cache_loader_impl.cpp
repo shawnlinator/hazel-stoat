@@ -66,7 +66,7 @@ SemiFuture<CollectionStatistics> StatsCacheLoaderImpl::getStats(OperationContext
             histograms.push_back(std::move(document));
         }
 
-        // TODO: SERVER-68745, parse histograms BSONs.
+        // TODO: SERVER-69238, parse histograms BSONs.
         CollectionStatistics stats{0};
         return makeReadyFutureWith([this, stats] { return stats; }).semi();
     } catch (const DBException& ex) {

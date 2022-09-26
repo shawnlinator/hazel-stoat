@@ -1,7 +1,33 @@
 FLAGS=-O0 -ggdb3 \
-	-Wall -Werror -Wextra -fsanitize=undefined -fsanitize=address \
-	-Wmaybe-uninitialized -Wmissing-field-initializers -Wshadow -Wno-unused-parameter \
-	-pedantic -Wno-implicit-fallthrough \
+	-Wall -Werror -Wextra \
+	-Wempty-body \
+	-Wenum-compare \
+	-Wformat-nonliteral \
+	-Wformat-security \
+	-Wimplicit-fallthrough \
+	-Winit-self \
+	-Wlogical-not-parentheses \
+	-Wlogical-op \
+	-Wmaybe-uninitialized \
+	-Wmissing-field-initializers \
+	-Wmissing-format-attribute \
+	-Wno-unused-parameter \
+	-Wparentheses \
+	-Wpointer-arith \
+	-Wshadow \
+	-Wsign-compare \
+	-Wsizeof-array-argument \
+	-Wunused-but-set-variable \
+	-Wvariadic-macros \
+	-Wwrite-strings \
+	-fdiagnostics-show-option \
+	-fno-exceptions \
+	-fno-omit-frame-pointer \
+	-fno-optimize-sibling-calls \
+	-fsanitize=address \
+	-fsanitize=undefined \
+	-fstack-protector \
+	-pedantic \
 	-DHAVE_STDINT_H -DHAVE_GETTIMEOFDAY -DHAVE_UNISTD_H -DHAVE_DIRENT_H -I.# -DDEBUG_PARSER
 
 CFLAGS=-Wdeclaration-after-statement ${FLAGS}
@@ -21,11 +47,16 @@ MANUAL_TESTS=tests/tester-parse-interval \
 AUTO_TESTS=tests/tester-parse-string tests/tester-parse-string-by-format \
 	tests/tester-create-ts tests/tester-render-ts tests/tester-render-ts-zoneinfo
 C_TESTS=tests/c/timelib_get_current_offset_test.o tests/c/timelib_decimal_hour.o \
-	tests/c/timelib_juliandate.o tests/c/issues.o tests/c/astro_rise_set_altitude.o \
+	tests/c/timelib_juliandate.o \
+	tests/c/issues.o tests/c/issue0120.o \
+	tests/c/astro_rise_set_altitude.o \
 	tests/c/parse_date_from_format_test.o tests/c/parse_intervals.o \
 	tests/c/warn_on_slim.o tests/c/parse_posix.o tests/c/transitions.o \
 	tests/c/parse_tz.o tests/c/render.o tests/c/create_ts_from_string.o \
-	tests/c/parse_date.o tests/c/php-rfc.o tests/c/diff.cpp
+	tests/c/parse_date.o tests/c/php-rfc.o tests/c/diff.o tests/c/interval.o \
+	tests/c/timezones_same.o tests/c/diff_days.o \
+	tests/c/timelib_hmsf_to_decimal_hour.o tests/c/dow.o \
+	tests/c/timelib_get_offset_info_test.o
 
 TEST_BINARIES=${MANUAL_TESTS} ${AUTO_TESTS}
 

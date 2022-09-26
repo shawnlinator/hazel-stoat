@@ -37,7 +37,7 @@
 
 const char *timelib_error_messages[10] = {
 	"No error",
-	"Can not allocate buffer for parsing",
+	"Cannot allocate buffer for parsing",
 	"Corrupt tzfile: The transitions in the file don't always increase",
 	"Corrupt tzfile: The expected 64-bit preamble is missing",
 	"Corrupt tzfile: No abbreviation could be found for a transition",
@@ -200,10 +200,19 @@ void timelib_decimal_hour_to_hms(double h, int *hour, int *min, int *sec)
 
 void timelib_hms_to_decimal_hour(int hour, int min, int sec, double *h)
 {
-	if (hour > 0) {
+	if (hour >= 0) {
 		*h = ((double)hour + (double)min / 60 + (double)sec / 3600);
 	} else {
 		*h = ((double)hour - (double)min / 60 - (double)sec / 3600);
+	}
+}
+
+void timelib_hmsf_to_decimal_hour(int hour, int min, int sec, int us, double *h)
+{
+	if (hour >= 0) {
+		*h = ((double)hour + (double)min / MINS_PER_HOUR + (double)sec / SECS_PER_HOUR) + (double)us / USECS_PER_HOUR;
+	} else {
+		*h = ((double)hour - (double)min / MINS_PER_HOUR - (double)sec / SECS_PER_HOUR) - (double)us / USECS_PER_HOUR;
 	}
 }
 

@@ -38,7 +38,8 @@ class CEHistogramTransportImpl;
 
 class CEHistogramTransport : public CEInterface {
 public:
-    CEHistogramTransport(std::shared_ptr<ce::CollectionStatistics> stats);
+    CEHistogramTransport(std::shared_ptr<ce::CollectionStatistics> stats,
+                         std::unique_ptr<CEInterface> fallbackCE);
     ~CEHistogramTransport();
 
     CEType deriveCE(const Metadata& metadata,

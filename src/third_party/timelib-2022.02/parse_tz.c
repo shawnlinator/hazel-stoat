@@ -910,23 +910,64 @@ timelib_time_offset *timelib_get_time_zone_info(timelib_sll ts, timelib_tzinfo *
 	return tmp;
 }
 
+int timelib_get_time_zone_offset_info(timelib_sll ts, timelib_tzinfo *tz, int32_t* offset, timelib_sll* transition_time, unsigned int* is_dst)
+{
+	ttinfo *to;
+	timelib_sll tmp_transition_time;
+
+	if (tz == NULL) {
+		return 0;
+	}
+
+	if ((to = timelib_fetch_timezone_offset(tz, ts, &tmp_transition_time))) {
+		if (offset) {
+			*offset = to->offset;
+		}
+		if (is_dst) {
+			*is_dst = to->isdst;
+		}
+		if (transition_time) {
+			*transition_time = tmp_transition_time;
+		}
+		return 1;
+	}
+	return 0;
+}
+
 timelib_sll timelib_get_current_offset(timelib_time *t)
 {
-	timelib_time_offset *gmt_offset;
-	timelib_sll retval;
-
 	switch (t->zone_type) {
 		case TIMELIB_ZONETYPE_ABBR:
 		case TIMELIB_ZONETYPE_OFFSET:
 			return t->z + (t->dst * 3600);
 
-		case TIMELIB_ZONETYPE_ID:
-			gmt_offset = timelib_get_time_zone_info(t->sse, t->tz_info);
-			retval = gmt_offset->offset;
-			timelib_time_offset_dtor(gmt_offset);
-			return retval;
+		case TIMELIB_ZONETYPE_ID: {
+			int32_t      offset = 0;
+			timelib_get_time_zone_offset_info(t->sse, t->tz_info, &offset, NULL, NULL);
+			return offset;
+		}
 
 		default:
 			return 0;
 	}
+}
+
+int timelib_same_timezone(timelib_time *one, timelib_time *two)
+{
+    if (one->zone_type != two->zone_type) {
+        return 0;
+    }
+
+    if (one->zone_type == TIMELIB_ZONETYPE_ABBR || one->zone_type == TIMELIB_ZONETYPE_OFFSET) {
+        if ((one->z + (one->dst * 3600)) == (two->z + (two->dst * 3600))) {
+            return 1;
+        }
+        return 0;
+    }
+
+    if (one->zone_type == TIMELIB_ZONETYPE_ID && strcmp(one->tz_info->name, two->tz_info->name) == 0) {
+        return 1;
+    }
+
+    return 0;
 }

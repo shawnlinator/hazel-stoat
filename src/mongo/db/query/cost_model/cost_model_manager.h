@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "mongo/db/query/optimizer/cascades/cost_model_gen.h"
+#include "mongo/db/query/cost_model/cost_model_gen.h"
 
 namespace mongo::cost_model {
 
@@ -51,12 +51,12 @@ public:
      * costModelManager.getCoefficients(BSON("scanIncrementalCost" << 0.001));
      * @endcode
      */
-    optimizer::cascades::CostModelCoefficients getCoefficients(const BSONObj& overrides) const;
+    CostModelCoefficients getCoefficients(const BSONObj& overrides) const;
 
     /**
      * Returns default version of Cost Model Coefficients.
      */
-    optimizer::cascades::CostModelCoefficients getDefaultCoefficients() const;
+    CostModelCoefficients getDefaultCoefficients() const;
 
 private:
     BSONObj _coefficients;

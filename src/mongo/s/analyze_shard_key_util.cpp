@@ -30,6 +30,7 @@
 #include "mongo/s/analyze_shard_key_util.h"
 
 #include "mongo/s/analyze_shard_key_feature_flag_gen.h"
+#include "mongo/s/is_mongos.h"
 
 namespace mongo {
 namespace analyze_shard_key {
@@ -55,6 +56,10 @@ bool supportsPersistingSampledQueries() {
 bool supportsPersistingSampledQueriesIgnoreFCV() {
     return isFeatureFlagEnabledIgnoreFCV() &&
         serverGlobalParams.clusterRole == ClusterRole::ShardServer;
+}
+
+bool supportsSamplingQueries() {
+    return isFeatureFlagEnabled() && isMongos();
 }
 
 }  // namespace analyze_shard_key

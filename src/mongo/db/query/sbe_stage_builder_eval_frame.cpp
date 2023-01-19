@@ -27,12 +27,16 @@
  *    it in the license file.
  */
 
-#include "mongo/platform/basic.h"
-
 #include "mongo/db/query/sbe_stage_builder_eval_frame.h"
+#include "mongo/db/query/optimizer/node.h"
+#include "mongo/db/query/optimizer/syntax/syntax.h"
+#include "mongo/db/query/sbe_stage_builder_abt_helpers.h"
+#include "mongo/db/query/sbe_stage_builder_abt_holder_impl.h"
 #include "mongo/db/query/sbe_stage_builder_helpers.h"
 
 namespace mongo::stage_builder {
+
+EvalExpr::EvalExpr(const abt::HolderPtr& a) : _storage(abt::wrap(a->_value)) {}
 
 std::unique_ptr<sbe::EExpression> EvalExpr::extractExpr(optimizer::SlotVarMap& varMap) {
     if (hasSlot()) {
@@ -40,7 +44,7 @@ std::unique_ptr<sbe::EExpression> EvalExpr::extractExpr(optimizer::SlotVarMap& v
     }
 
     if (hasABT()) {
-        return abtToExpr(stdx::get<optimizer::ABT>(_storage), varMap);
+        return abtToExpr(stdx::get<abt::HolderPtr>(_storage)->_value, varMap);
     }
 
     if (stdx::holds_alternative<bool>(_storage)) {
@@ -50,19 +54,19 @@ std::unique_ptr<sbe::EExpression> EvalExpr::extractExpr(optimizer::SlotVarMap& v
     return std::move(stdx::get<std::unique_ptr<sbe::EExpression>>(_storage));
 }
 
-optimizer::ABT EvalExpr::extractABT(optimizer::SlotVarMap& varMap) {
+abt::HolderPtr EvalExpr::extractABT(optimizer::SlotVarMap& varMap) {
     if (hasSlot()) {
         auto slotId = stdx::get<sbe::value::SlotId>(_storage);
         auto varName = makeVariableName(slotId);
         varMap.emplace(varName, slotId);
-        return optimizer::make<optimizer::Variable>(varName);
+        return abt::wrap(optimizer::make<optimizer::Variable>(varName));
     }
 
     tassert(6950800,
             "Unexpected: extractABT() method invoked on an EExpression object",
-            stdx::holds_alternative<optimizer::ABT>(_storage));
+            stdx::holds_alternative<abt::HolderPtr>(_storage));
 
-    return std::move(stdx::get<optimizer::ABT>(_storage));
+    return std::move(stdx::get<abt::HolderPtr>(_storage));
 }
 
 }  // namespace mongo::stage_builder

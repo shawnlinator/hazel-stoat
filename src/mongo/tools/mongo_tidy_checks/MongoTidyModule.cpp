@@ -28,11 +28,12 @@
  */
 
 #include "MongoTestCheck.h"
+#include "MongoUninterruptibleLockGuardCheck.h"
 
-#include "clang-tidy/ClangTidy.h"
-#include "clang-tidy/ClangTidyCheck.h"
-#include "clang-tidy/ClangTidyModule.h"
-#include "clang-tidy/ClangTidyModuleRegistry.h"
+#include <clang-tidy/ClangTidy.h>
+#include <clang-tidy/ClangTidyCheck.h>
+#include <clang-tidy/ClangTidyModule.h>
+#include <clang-tidy/ClangTidyModuleRegistry.h>
 
 namespace mongo {
 namespace tidy {
@@ -40,6 +41,8 @@ namespace tidy {
 class MongoTidyModule : public ClangTidyModule {
 public:
     void addCheckFactories(ClangTidyCheckFactories& CheckFactories) override {
+        CheckFactories.registerCheck<MongoUninterruptibleLockGuardCheck>(
+            "mongo-uninterruptible-lock-guard-check");
         CheckFactories.registerCheck<MongoTestCheck>("mongo-test-check");
     }
 };

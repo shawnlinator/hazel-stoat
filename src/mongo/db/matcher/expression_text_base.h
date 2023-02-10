@@ -60,7 +60,9 @@ public:
      */
     virtual const fts::FTSQuery& getFTSQuery() const = 0;
 
-    BSONObj getSerializedRightHandSide() const final {
+    BSONObj getSerializedRightHandSide(
+        boost::optional<StringData> replacementForLiteralArgs) const final {
+        // TODO SERVER-73676 is this going to be a problem? I don't see how this is unreachable...
         MONGO_UNREACHABLE;
     }
 
@@ -70,7 +72,7 @@ public:
 
     void debugString(StringBuilder& debug, int indentationLevel = 0) const final;
 
-    void serialize(BSONObjBuilder* out, bool includePath) const final;
+    void serialize(BSONObjBuilder* out, SerializationOptions opts) const final;
 
     bool equivalent(const MatchExpression* other) const final;
 

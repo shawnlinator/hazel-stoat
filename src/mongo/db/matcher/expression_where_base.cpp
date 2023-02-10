@@ -46,7 +46,8 @@ void WhereMatchExpressionBase::debugString(StringBuilder& debug, int indentation
     debug << "code: " << getCode() << "\n";
 }
 
-void WhereMatchExpressionBase::serialize(BSONObjBuilder* out, bool includePath) const {
+void WhereMatchExpressionBase::serialize(BSONObjBuilder* out, SerializationOptions opts) const {
+    // TODO SERVER-73676 respect 'opts.'
     out->appendCode("$where", getCode());
 }
 

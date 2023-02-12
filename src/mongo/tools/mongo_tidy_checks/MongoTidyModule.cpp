@@ -27,6 +27,8 @@
  *    it in the license file.
  */
 
+
+#include "MongoHeaderBracketCheck.h"
 #include "MongoTestCheck.h"
 #include "MongoUninterruptibleLockGuardCheck.h"
 
@@ -38,18 +40,19 @@
 namespace mongo {
 namespace tidy {
 
-class MongoTidyModule : public ClangTidyModule {
+class MongoTidyModule : public clang::tidy::ClangTidyModule {
 public:
-    void addCheckFactories(ClangTidyCheckFactories& CheckFactories) override {
+    void addCheckFactories(clang::tidy::ClangTidyCheckFactories& CheckFactories) override {
         CheckFactories.registerCheck<MongoUninterruptibleLockGuardCheck>(
             "mongo-uninterruptible-lock-guard-check");
+        CheckFactories.registerCheck<MongoHeaderBracketCheck>("mongo-header-bracket-check");
         CheckFactories.registerCheck<MongoTestCheck>("mongo-test-check");
     }
 };
 
 // Register the MongoTidyModule using this statically initialized variable.
-static ClangTidyModuleRegistry::Add<MongoTidyModule> X("mongo-tidy-module",
-                                                       "MongoDB custom checks.");
+static clang::tidy::ClangTidyModuleRegistry::Add<MongoTidyModule> X("mongo-tidy-module",
+                                                                    "MongoDB custom checks.");
 
 }  // namespace tidy
 

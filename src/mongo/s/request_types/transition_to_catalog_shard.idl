@@ -46,6 +46,6 @@ commands:
     description: "The transitionToCatalogShard command for config server."
     command_name: _configsvrTransitionToCatalogShard
     cpp_name: ConfigsvrTransitionToCatalogShard
-    strict: true
+    strict: false
     namespace: ignored
     api_version: ""

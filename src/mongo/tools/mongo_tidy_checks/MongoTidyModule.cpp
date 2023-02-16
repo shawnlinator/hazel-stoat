@@ -27,7 +27,7 @@
  *    it in the license file.
  */
 
-
+#include "MongoCctypeCheck.h"
 #include "MongoHeaderBracketCheck.h"
 #include "MongoTestCheck.h"
 #include "MongoUninterruptibleLockGuardCheck.h"
@@ -46,6 +46,7 @@ public:
         CheckFactories.registerCheck<MongoUninterruptibleLockGuardCheck>(
             "mongo-uninterruptible-lock-guard-check");
         CheckFactories.registerCheck<MongoHeaderBracketCheck>("mongo-header-bracket-check");
+        CheckFactories.registerCheck<MongoCctypeCheck>("mongo-cctype-check");
         CheckFactories.registerCheck<MongoTestCheck>("mongo-test-check");
     }
 };

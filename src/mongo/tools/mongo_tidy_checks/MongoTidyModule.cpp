@@ -29,6 +29,7 @@
 
 #include "MongoCctypeCheck.h"
 #include "MongoHeaderBracketCheck.h"
+#include "MongoStdOptionalCheck.h"
 #include "MongoTestCheck.h"
 #include "MongoUninterruptibleLockGuardCheck.h"
 
@@ -47,6 +48,7 @@ public:
             "mongo-uninterruptible-lock-guard-check");
         CheckFactories.registerCheck<MongoHeaderBracketCheck>("mongo-header-bracket-check");
         CheckFactories.registerCheck<MongoCctypeCheck>("mongo-cctype-check");
+        CheckFactories.registerCheck<MongoStdOptionalCheck>("mongo-std-optional-check");
         CheckFactories.registerCheck<MongoTestCheck>("mongo-test-check");
     }
 };

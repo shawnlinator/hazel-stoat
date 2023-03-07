@@ -39,6 +39,11 @@ namespace mongo {
 class MovePrimaryMetricsFieldNameProvider
     : public WithOplogApplicationCountFieldNames<
           WithDocumentCopyApproximationFieldNameOverrides<WithDocumentCopyCountFieldNameOverrides<
-              ShardingDataTransformInstanceMetricsFieldNameProvider>>> {};
+              ShardingDataTransformInstanceMetricsFieldNameProvider>>> {
+public:
+    StringData getForCoordinatorState() const override;
+    StringData getForDonorState() const override;
+    StringData getForRecipientState() const override;
+};
 
 }  // namespace mongo

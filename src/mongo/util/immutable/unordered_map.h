@@ -30,6 +30,7 @@
 #pragma once
 
 #include "mongo/stdx/trusted_hasher.h"
+#include "mongo/util/immutable/memory_policy.h"
 
 #include <immer/map.hpp>
 #include <immer/map_transient.hpp>
@@ -60,5 +61,5 @@ template <class K,
           class V,
           class Hasher = DefaultHasher<K>,
           class Eq = absl::container_internal::hash_default_eq<K>>
-using unordered_map = immer::map<K, V, EnsureTrustedHasher<Hasher, K>, Eq>;
+using unordered_map = immer::map<K, V, EnsureTrustedHasher<Hasher, K>, Eq, detail::MemoryPolicy>;
 }  // namespace mongo::immutable

@@ -30,6 +30,7 @@
 #include "MongoCctypeCheck.h"
 #include "MongoHeaderBracketCheck.h"
 #include "MongoStdOptionalCheck.h"
+#include "MongoTraceCheck.h"
 #include "MongoUninterruptibleLockGuardCheck.h"
 #include "MongoVolatileCheck.h"
 
@@ -50,6 +51,7 @@ public:
         CheckFactories.registerCheck<MongoCctypeCheck>("mongo-cctype-check");
         CheckFactories.registerCheck<MongoStdOptionalCheck>("mongo-std-optional-check");
         CheckFactories.registerCheck<MongoVolatileCheck>("mongo-volatile-check");
+        CheckFactories.registerCheck<MongoTraceCheck>("mongo-trace-check");
     }
 };
 

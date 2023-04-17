@@ -84,9 +84,12 @@
 #define TIMELIB_TIME_PART_DONT_KEEP               0x00
 #define TIMELIB_TIME_PART_KEEP                    0x01
 
+#define MINS_PER_HOUR     60
 #define SECS_PER_ERA   TIMELIB_LL_CONST(12622780800)
 #define SECS_PER_DAY   86400
 #define SECS_PER_HOUR   3600
+#define USECS_PER_HOUR TIMELIB_LL_CONST(3600000000)
+
 #define DAYS_PER_WEEK      7
 #define DAYS_PER_YEAR    365
 #define DAYS_PER_LYEAR   366
@@ -108,6 +111,20 @@
 		timelib_free(m);    \
 		m = NULL;   \
 	}
+
+#if defined (__GNUC__)
+# define TIMELIB_GNUC_CHECK_VERSION(major, minor) \
+      ((__GNUC__ > (major)) ||                   \
+      ((__GNUC__ == (major)) && (__GNUC_MINOR__ >= (minor))))
+#else
+# define TIMELIB_GNUC_CHECK_VERSION(major, minor) 0
+#endif
+
+#if TIMELIB_GNUC_CHECK_VERSION(7, 0)
+# define TIMELIB_BREAK_INTENTIONALLY_MISSING __attribute__ ((fallthrough));
+#else
+# define TIMELIB_BREAK_INTENTIONALLY_MISSING
+#endif
 
 struct _ttinfo
 {

@@ -27,7 +27,7 @@
  *    it in the license file.
  */
 
-#include "lock_manager_defs.h"
+#include "mongo/db/concurrency/lock_manager_defs.h"
 
 namespace mongo {
 

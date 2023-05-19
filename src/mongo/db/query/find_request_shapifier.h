@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "mongo/db/query/find_command_gen.h"
+#include "mongo/db/query/find_command.h"
 #include "mongo/db/query/request_shapifier.h"
 
 namespace mongo::query_stats {

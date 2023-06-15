@@ -86,13 +86,14 @@ TEST_F(InternalUnpackBucketSortReorderTest, OptimizeForMetaSortLimit) {
 
     auto serialized = pipeline->serializeToBson();
 
-    // $match and $sort are now before $_internalUnpackBucket, with a new $limit added after the
-    // stage.
-    ASSERT_EQ(4, serialized.size());
+    // $match and $sort are now before $_internalUnpackBucket, with a new $limit added before and
+    // after the stage.
+    ASSERT_EQ(5, serialized.size());
     ASSERT_BSONOBJ_EQ(fromjson("{$match: {meta: {$gt: 2}}}"), serialized[0]);
     ASSERT_BSONOBJ_EQ(fromjson("{$sort: {'meta.a': 1, 'meta.b': -1}}"), serialized[1]);
-    ASSERT_BSONOBJ_EQ(unpackSpecObj, serialized[2]);
-    ASSERT_BSONOBJ_EQ(fromjson("{$limit: 2}"), serialized[3]);
+    ASSERT_BSONOBJ_EQ(fromjson("{$limit: 2}"), serialized[2]);
+    ASSERT_BSONOBJ_EQ(unpackSpecObj, serialized[3]);
+    ASSERT_BSONOBJ_EQ(fromjson("{$limit: 2}"), serialized[4]);
 }
 
 }  // namespace

@@ -51,10 +51,11 @@ public:
         using InvocationBase::InvocationBase;
 
         void typedRun(OperationContext* opCtx) {
-            uassert(ErrorCodes::CommandNotSupported,
-                    "Resharding improvements is not enabled, cannot perform moveCollection command",
-                    resharding::gFeatureFlagReshardingImprovements.isEnabled(
-                        serverGlobalParams.featureCompatibility));
+            uassert(
+                ErrorCodes::CommandNotSupported,
+                "Resharding improvements is not enabled, cannot perform moveCollection command.",
+                resharding::gFeatureFlagReshardingImprovements.isEnabled(
+                    serverGlobalParams.featureCompatibility));
 
             const auto& nss = ns();
             ShardsvrReshardCollection shardsvrReshardCollection(nss);

@@ -1,4 +1,7 @@
 test_kind: js_test
+description: |
+  Run test suites with a replica set and multitenancy enabled. Simulate Atlas Proxy behavior
+  by overriding and injecting "$tenant" and tenant prefix.
 
 selector:
   roots:

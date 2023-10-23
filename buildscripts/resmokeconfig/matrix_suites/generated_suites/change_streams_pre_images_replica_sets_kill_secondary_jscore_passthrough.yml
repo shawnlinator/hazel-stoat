@@ -21,7 +21,7 @@ executor:
         enableTestCommands: 1
         expiredChangeStreamPreImageRemovalJobSleepSecs: 1
         failpoint.preImagesEnabledOnAllCollectionsByDefault: '{mode: ''alwaysOn''}'
-        failpoint.truncateOnlyOnSecondaries: '{mode: ''alwaysOn''}'
+        failpoint.preImagesTruncateOnlyOnSecondaries: '{mode: ''alwaysOn''}'
         logComponentVerbosity:
           replication:
             heartbeats: 2
@@ -32,7 +32,7 @@ executor:
       syncdelay: 5
       wiredTigerCollectionConfigString: allocation_size=1k,leaf_page_max=1k
       wiredTigerEngineConfigString: debug_mode=(table_logging=true)
-    num_nodes: 3
+    num_nodes: 2
     replset_config_options:
       settings:
         electionTimeoutMillis: 5000

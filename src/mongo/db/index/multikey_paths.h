@@ -30,11 +30,12 @@
 #pragma once
 
 #include <cstddef>
+#include <functional>
 #include <set>
+#include <string>
 #include <vector>
 
 namespace mongo {
-
 // If non-empty, a vector with size equal to the number of elements in the index key pattern. Each
 // element in the vector is an ordered set of positions (starting at 0) into the corresponding
 // indexed field that represent what prefixes of the indexed field cause the index to be multikey.
@@ -56,4 +57,5 @@ namespace mongo {
 // An empty vector is used to represent that the index doesn't support path-level multikey tracking.
 using MultikeyPaths = std::vector<std::set<std::size_t>>;
 
+std::string multikeyPathsToString(MultikeyPaths paths);
 }  // namespace mongo

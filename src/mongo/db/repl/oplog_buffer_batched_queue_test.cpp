@@ -35,6 +35,8 @@
 namespace mongo {
 namespace repl {
 
+namespace {
+
 BSONObj makeNoopOplogEntry(int t) {
     auto oplogEntry = repl::DurableOplogEntry(
         OpTime(Timestamp(t, 1), 1),                                // optime
@@ -58,6 +60,8 @@ BSONObj makeNoopOplogEntry(int t) {
         boost::none);  // needsRetryImage
     return oplogEntry.toBSON();
 }
+
+}  // namespace
 
 class OplogBufferBatchedQueueTest : public ServiceContextMongoDTest {
 public:
@@ -298,11 +302,11 @@ TEST_F(OplogBufferBatchedQueueTest, pushUnblocksWaitForData) {
     // since the buffer is still empty.
     ASSERT_FALSE(buffer.waitForData(Seconds(3)));
 
-    // The second waitForData should return true after waiting
-    // since there is new data pushed in.
+    // Call waitForData with a long duration, push should
+    // unblock it and return true.
     stdx::thread waitForDataThread([&, this] {
-        // Will block until there data in buffer.
-        ASSERT(buffer.waitForData(Seconds(3)));
+        // Will block until there is data in buffer.
+        ASSERT(buffer.waitForData(Days(1)));
     });
 
     std::vector<BSONObj> ops;
@@ -333,7 +337,7 @@ TEST_F(OplogBufferBatchedQueueTest, shutdownUnblocksWaitForData) {
     // Call waitForData with a long duration, shutdown should
     // unblock it and return false.
     stdx::thread waitForDataThread([&, this] {
-        // Will block until there data in buffer.
+        // Will block until there is data in buffer.
         ASSERT_FALSE(buffer.waitForData(Days(1)));
     });
 
@@ -359,7 +363,7 @@ TEST_F(OplogBufferBatchedQueueTest, drainModeUnblocksWaitForData) {
     // Call waitForData with a long duration, entering drain
     // mode should unblock it and return false.
     stdx::thread waitForDataThread1([&, this] {
-        // Will block until there data in buffer.
+        // Will block until there is data in buffer.
         ASSERT_FALSE(buffer.waitForData(Days(1)));
     });
 
@@ -374,24 +378,22 @@ TEST_F(OplogBufferBatchedQueueTest, drainModeUnblocksWaitForData) {
     // indefinitely unless being interrupted.
     buffer.exitDrainMode();
 
-    bool waitDone = false;
+    bool doneWait = false;
     stdx::thread waitForDataThread2([&, this] {
-        try {
-            // Will block until there data in buffer.
-            ASSERT_FALSE(buffer.waitForDataFor(Days(1), opCtx()));
-        } catch (ExceptionForCat<ErrorCategory::CancellationError>&) {
-            std::cout << "WaitForData thread interrupted." << std::endl;
-        }
-        waitDone = true;
+        // Will block until there data in buffer.
+        ASSERT_THROWS_CODE(buffer.waitForDataFor(Days(1), opCtx()),
+                           DBException,
+                           ErrorCodes::InterruptedAtShutdown);
+        doneWait = true;
     });
 
     sleepsecs(3);
-    ASSERT_FALSE(waitDone);
+    ASSERT_FALSE(doneWait);
 
     opCtx()->markKilled(ErrorCodes::InterruptedAtShutdown);
     waitForDataThread2.join();
 
-    ASSERT(waitDone);
+    ASSERT(doneWait);
 }
 
 }  // namespace repl

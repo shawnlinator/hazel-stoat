@@ -40,8 +40,8 @@
 namespace mongo::classic_runtime_planner_for_sbe {
 
 SingleSolutionPassthroughPlanner::SingleSolutionPassthroughPlanner(
-    OperationContext* opCtx, PlannerData plannerData, std::unique_ptr<QuerySolution> solution)
-    : PlannerBase(opCtx, std::move(plannerData)), _solution(std::move(solution)) {}
+    PlannerDataForSBE plannerData, std::unique_ptr<QuerySolution> solution)
+    : PlannerBase(std::move(plannerData)), _solution(std::move(solution)) {}
 
 std::unique_ptr<PlanExecutor, PlanExecutor::Deleter> SingleSolutionPassthroughPlanner::plan() {
     LOGV2_DEBUG(8523405, 5, "Using SBE single solution planner");

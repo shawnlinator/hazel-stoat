@@ -39,7 +39,7 @@ template <class T>
 class Tracked {
 public:
     Tracked(TrackingAllocatorStats& stats, T obj) : _stats(stats), _obj(std::move(obj)) {
-        _stats.get().bytesAllocated.fetchAndAddRelaxed(_obj.allocated());
+        _stats.get().bytesAllocated(_obj.allocated());
     }
 
     Tracked(Tracked&) = delete;
@@ -61,7 +61,7 @@ public:
     }
 
     ~Tracked() {
-        _stats.get().bytesAllocated.fetchAndSubtractRelaxed(_obj.allocated());
+        _stats.get().bytesDeallocated(_obj.allocated());
     }
 
     T& get() {
@@ -97,7 +97,7 @@ public:
     }
 
     uint64_t allocated() const {
-        return _stats.bytesAllocated.loadRelaxed();
+        return _stats.allocated();
     }
 
 private:

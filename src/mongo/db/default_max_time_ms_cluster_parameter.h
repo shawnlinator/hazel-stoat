@@ -27,8 +27,20 @@
  *    it in the license file.
  */
 
+#include <boost/optional/optional.hpp>
+
 #include "mongo/base/string_data.h"
+#include "mongo/db/basic_types.h"
+#include "mongo/db/commands.h"
+#include "mongo/util/duration.h"
 
 namespace mongo {
 static constexpr auto kDefaultMaxTimeMSClusterParameterName = "defaultMaxTimeMS"_sd;
+
+/**
+ * Returns the value of maxTimeMS that should be used for a command or boost::none if none could be
+ * used.
+ */
+boost::optional<Milliseconds> getRequestOrDefaultMaxTimeMS(
+    OperationContext* opCtx, const boost::optional<IDLAnyType>& requestMaxTimeMS, Command* command);
 }  // namespace mongo

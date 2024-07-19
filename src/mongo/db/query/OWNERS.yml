@@ -1,0 +1,11 @@
+version: 1.0.0
+filters:
+  - "query_stats":
+    approvers:
+      - 10gen/query-integration
+  - "query_shape":
+    approvers:
+      - 10gen/query-integration
+  - "timeseries":
+    approvers:
+      - 10gen/query-integration

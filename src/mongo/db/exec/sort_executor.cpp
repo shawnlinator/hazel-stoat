@@ -27,30 +27,9 @@
  *    it in the license file.
  */
 
-#include <exception>
-#include <system_error>
 
 #include "mongo/db/exec/sort_executor.h"
 #include "mongo/db/exec/working_set.h"
-#include "mongo/platform/atomic_word.h"
-
-namespace mongo {
-namespace {
-/**
- * Generates a new file name on each call using a static, atomic and monotonically increasing
- * number.
- *
- * Each user of the Sorter must implement this function to ensure that all temporary files that the
- * Sorter instances produce are uniquely identified using a unique file name extension with separate
- * atomic variable. This is necessary because the sorter.cpp code is separately included in multiple
- * places, rather than compiled in one place and linked, and so cannot provide a globally unique ID.
- */
-std::string nextFileName() {
-    static AtomicWord<unsigned> sortExecutorFileCounter;
-    return "extsort-sort-executor." + std::to_string(sortExecutorFileCounter.fetchAndAdd(1));
-}
-}  // namespace
-}  // namespace mongo
 
 #include "mongo/db/sorter/sorter.cpp"
 

@@ -29,43 +29,15 @@
 
 #pragma once
 
-#include "mongo/db/index/multikey_paths.h"
 #include "mongo/db/operation_context.h"
-#include "mongo/db/storage/key_string/key_string.h"
-#include "mongo/util/auto_clear_ptr.h"
-
 namespace mongo {
 
 /**
- * Execution context for recycling and reusing temporary objects within the lifetime of a database
- * operation. Users of any members should never leave any state behind.
+ * This class encompasses the storage state needed for an operation.
  */
 class StorageExecutionContext {
 public:
     static const OperationContext::Decoration<StorageExecutionContext> get;
-
-    StorageExecutionContext();
-
-    // No copy and no move
-    StorageExecutionContext(const StorageExecutionContext&) = delete;
-    StorageExecutionContext(StorageExecutionContext&&) = delete;
-    StorageExecutionContext& operator=(const StorageExecutionContext&) = delete;
-    StorageExecutionContext& operator=(StorageExecutionContext&&) = delete;
-
-    AutoClearPtr<KeyStringSet> keys() {
-        return makeAutoClearPtr(&_keys);
-    }
-    AutoClearPtr<KeyStringSet> multikeyMetadataKeys() {
-        return makeAutoClearPtr(&_multikeyMetadataKeys);
-    }
-    AutoClearPtr<MultikeyPaths> multikeyPaths() {
-        return makeAutoClearPtr(&_multikeyPaths);
-    }
-
-private:
-    KeyStringSet _keys;
-    KeyStringSet _multikeyMetadataKeys;
-    MultikeyPaths _multikeyPaths;
 };
 
 }  // namespace mongo

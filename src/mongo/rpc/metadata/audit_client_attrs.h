@@ -42,15 +42,18 @@ namespace mongo::rpc {
 
 class AuditClientAttrs : public rpc::AuditClientAttrsBase {
 public:
-    AuditClientAttrs(HostAndPort local, HostAndPort remote, std::vector<HostAndPort> proxies)
-        : AuditClientAttrsBase(std::move(local), std::move(remote), std::move(proxies)) {}
-    AuditClientAttrs(HostAndPort local, HostAndPort remote)
-        : AuditClientAttrs(std::move(local), std::move(remote), {}) {}
+    AuditClientAttrs(HostAndPort local,
+                     HostAndPort remote,
+                     std::vector<HostAndPort> proxies = {},
+                     bool isImpersonating = false)
+        : AuditClientAttrsBase(
+              std::move(local), std::move(remote), std::move(proxies), isImpersonating) {}
 
     explicit AuditClientAttrs(const BSONObj& obj);
 
     static boost::optional<AuditClientAttrs> get(Client* client);
     static void set(Client* client, AuditClientAttrs clientAttrs);
+    static void resetToPeerClient(Client* client);
     static void reset(Client* client);
 
     ImpersonatedClientMetadata generateClientMetadataObj();

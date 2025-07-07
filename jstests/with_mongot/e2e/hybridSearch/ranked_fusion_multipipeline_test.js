@@ -1,6 +1,7 @@
 /*
  * Tests hybrid search with the rank fusion using the $rankFusion stage and more than 2 input
- * pipelines.
+ * pipelines. We manually observe returned results and see that they clearly relate to the input
+ * pipeline criteria specified, then codify the results as an ordered list of document ids.
  * @tags: [ featureFlagRankFusionFull, requires_fcv_81 ]
  */
 

@@ -29,6 +29,8 @@
 
 #include "mongo/db/pipeline/pipeline_test_util.h"
 
+#include "mongo/db/query/compiler/rewrites/matcher/expression_optimizer.h"
+
 namespace mongo {
 
 std::unique_ptr<Pipeline> normalizeMatchStageInPipeline(std::unique_ptr<Pipeline> pipeline) {
@@ -36,7 +38,7 @@ std::unique_ptr<Pipeline> normalizeMatchStageInPipeline(std::unique_ptr<Pipeline
         if (auto matchStage = dynamic_cast<DocumentSourceMatch*>(source.get())) {
             auto matchProcessor = matchStage->getMatchProcessor();
             auto normalizedExpr =
-                MatchExpression::normalize(std::move(matchProcessor->getExpression()));
+                normalizeMatchExpression(std::move(matchProcessor->getExpression()));
             matchProcessor->setExpression(std::move(normalizedExpr));
         }
     }

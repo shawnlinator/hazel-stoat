@@ -30,18 +30,23 @@
 
 #include "mongo/db/extension/sdk/extension_status.h"
 
-MongoExtensionStatus* initialize_extension(MongoExtensionHostPortal* portal) {
+static ::MongoExtensionStatus* initialize_extension(const ::MongoExtension* extension,
+                                                    const ::MongoExtensionHostPortal* portal) {
     return portal->registerStageDescriptor(nullptr);
 }
 
-static const MongoExtension my_extension = {
+static const ::MongoExtensionVTable vtable = {
+    .initialize = &initialize_extension,
+};
+
+static const ::MongoExtension my_extension = {
+    .vtable = &vtable,
     .version = MONGODB_EXTENSION_API_VERSION,
-    .initialize = initialize_extension,
 };
 
 extern "C" {
-MongoExtensionStatus* get_mongodb_extension(const MongoExtensionAPIVersionVector* hostVersions,
-                                            const MongoExtension** extension) {
+::MongoExtensionStatus* get_mongodb_extension(const ::MongoExtensionAPIVersionVector* hostVersions,
+                                              const ::MongoExtension** extension) {
     return mongo::extension::sdk::enterCXX([&]() { *extension = &my_extension; });
 }
 }

@@ -8,6 +8,8 @@ description: |
 selector:
   roots:
     - jstests/extensions/**/*.js
+  exclude_with_any_tags:
+    - requires_sharding
 
 executor:
   archive:

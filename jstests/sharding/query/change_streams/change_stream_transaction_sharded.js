@@ -1,4 +1,7 @@
 // Confirms that change streams only see committed operations for sharded transactions.
+// TODO SERVER-109890: The test 'change_stream_transaction_sharded_commit_timestamp.js'
+// is a clone of this file with additional testing for the 'commitTimestamp' field.
+// Once v9.0 becomes last LTS we can remove this file in favor of the other.
 // @tags: [
 //   requires_sharding,
 //   uses_change_streams,
@@ -16,7 +19,7 @@ const namespace = dbName + "." + collName;
 
 const st = new ShardingTest({
     shards: 2,
-    rs: {nodes: 1, setParameter: {writePeriodicNoops: true, periodicNoopIntervalSecs: 1}}
+    rs: {nodes: 1, setParameter: {writePeriodicNoops: true, periodicNoopIntervalSecs: 1}},
 });
 
 const mongosConn = st.s;
@@ -26,25 +29,26 @@ assert.commandWorked(mongosConn.getDB(dbName).getCollection(collName).createInde
 
 // Shard the test collection and split it into two chunks: one that contains all {shard: 1}
 // documents and one that contains all {shard: 2} documents.
-st.shardColl(collName,
-             {shard: 1} /* shard key */,
-             {shard: 2} /* split at */,
-             {shard: 2} /* move the chunk containing {shard: 2} to its own shard */,
-             dbName,
-             true);
+st.shardColl(
+    collName,
+    {shard: 1} /* shard key */,
+    {shard: 2} /* split at */,
+    {shard: 2} /* move the chunk containing {shard: 2} to its own shard */,
+    dbName,
+    true,
+);
 // Seed each chunk with an initial document.
-assert.commandWorked(mongosConn.getDB(dbName).getCollection(collName).insert(
-    {shard: 1}, {writeConcern: {w: "majority"}}));
-assert.commandWorked(mongosConn.getDB(dbName).getCollection(collName).insert(
-    {shard: 2}, {writeConcern: {w: "majority"}}));
+assert.commandWorked(
+    mongosConn.getDB(dbName).getCollection(collName).insert({shard: 1},
+                                                            {writeConcern: {w: "majority"}}),
+);
+assert.commandWorked(
+    mongosConn.getDB(dbName).getCollection(collName).insert({shard: 2},
+                                                            {writeConcern: {w: "majority"}}),
+);
 
 const db = mongosConn.getDB(dbName);
 const coll = db.getCollection(collName);
-
-const fcvDoc = db.adminCommand({getParameter: 1, featureCompatibilityVersion: 1});
-// The 'commitTimestamp' field is exposed by default from v8.2 onwards.
-const alwaysExpectCommitTimestamp =
-    (MongoRunner.compareBinVersions(fcvDoc.featureCompatibilityVersion.version, "8.2") >= 0);
 
 let changeListShard1 = [], changeListShard2 = [];
 
@@ -77,38 +81,18 @@ session2.startTransaction({readConcern: {level: "majority"}});
  * transaction may commit at a different cluster time on each shard, which impacts the
  * ordering of the change stream.
  */
-function assertWritesVisibleWithCapture(cursor,
-                                        expectedChangesShard1,
-                                        expectedChangesShard2,
-                                        changeCaptureListShard1,
-                                        changeCaptureListShard2,
-                                        expectCommitTimestamp = false) {
+function assertWritesVisibleWithCapture(
+    cursor,
+    expectedChangesShard1,
+    expectedChangesShard2,
+    changeCaptureListShard1,
+    changeCaptureListShard2,
+) {
     function assertChangeEqualWithCapture(changeDoc, expectedChange, changeCaptureList) {
         assert.eq(expectedChange.operationType, changeDoc.operationType);
         assert.eq(expectedChange._id, changeDoc.documentKey._id);
         changeCaptureList.push(changeDoc);
     }
-
-    // Verify that all commit timestamps are identical.
-    let commitTimestamp = null;
-    const assertCommitTimestamp = (changeDoc) => {
-        if (expectCommitTimestamp) {
-            assert(changeDoc.hasOwnProperty("commitTimestamp"),
-                   "expecting doc to have a 'commitTimestamp' field",
-                   {changeDoc});
-            assert(isTimestamp(changeDoc["commitTimestamp"]),
-                   "expecting 'commitTimestamp' field to be a timestamp",
-                   {changeDoc});
-            if (commitTimestamp === null) {
-                commitTimestamp = changeDoc["commitTimestamp"];
-            } else {
-                assert.eq(commitTimestamp,
-                          changeDoc["commitTimestamp"],
-                          "expecting equal commitTimestamps",
-                          {commitTimestamp, changeDoc});
-            }
-        }
-    };
 
     // Cross-shard transaction, and "endOfTransaction" events are enabled.
     const expectEndOfTransaction = expectedChangesShard1.length && expectedChangesShard2.length &&
@@ -120,21 +104,16 @@ function assertWritesVisibleWithCapture(cursor,
 
         if (changeDoc.documentKey.shard === 1) {
             assert(expectedChangesShard1.length);
-            assertChangeEqualWithCapture(changeDoc,
-                                         expectedChangesShard1[0],
-                                         changeCaptureListShard1,
-                                         expectCommitTimestamp);
+            assertChangeEqualWithCapture(
+                changeDoc, expectedChangesShard1[0], changeCaptureListShard1);
             expectedChangesShard1.shift();
         } else {
             assert.eq(2, changeDoc.documentKey.shard);
             assert(expectedChangesShard2.length);
-            assertChangeEqualWithCapture(changeDoc,
-                                         expectedChangesShard2[0],
-                                         changeCaptureListShard2,
-                                         expectCommitTimestamp);
+            assertChangeEqualWithCapture(
+                changeDoc, expectedChangesShard2[0], changeCaptureListShard2);
             expectedChangesShard2.shift();
         }
-        assertCommitTimestamp(changeDoc);
     }
 
     if (expectEndOfTransaction) {
@@ -146,22 +125,31 @@ function assertWritesVisibleWithCapture(cursor,
     assertNoChanges(cursor);
 }
 
-// Open a change stream on the test collection.
 const changeStreamCursor = coll.watch([], {showExpandedEvents: true});
 
 // Insert a document and confirm that the change stream has it.
 assert.commandWorked(coll.insert({shard: 1, _id: "no-txn-doc-1"}, {writeConcern: {w: "majority"}}));
-assertWritesVisibleWithCapture(changeStreamCursor,
-                               [{operationType: "insert", _id: "no-txn-doc-1"}],
-                               [],
-                               changeListShard1,
-                               changeListShard2);
+assertWritesVisibleWithCapture(
+    changeStreamCursor,
+    [{operationType: "insert", _id: "no-txn-doc-1"}],
+    [],
+    changeListShard1,
+    changeListShard2,
+);
 
 // Insert two documents under each transaction and confirm no change stream updates.
 assert.commandWorked(
-    sessionColl1.insert([{shard: 1, _id: "txn1-doc-1"}, {shard: 2, _id: "txn1-doc-2"}]));
+    sessionColl1.insert([
+        {shard: 1, _id: "txn1-doc-1"},
+        {shard: 2, _id: "txn1-doc-2"},
+    ]),
+);
 assert.commandWorked(
-    sessionColl2.insert([{shard: 1, _id: "txn2-doc-1"}, {shard: 2, _id: "txn2-doc-2"}]));
+    sessionColl2.insert([
+        {shard: 1, _id: "txn2-doc-1"},
+        {shard: 2, _id: "txn2-doc-2"},
+    ]),
+);
 
 // Update one document under each transaction and confirm no change stream updates.
 assert.commandWorked(sessionColl1.update({shard: 1, _id: "txn1-doc-1"}, {$set: {"updated": 1}}));
@@ -178,36 +166,41 @@ assert.commandWorked(sessionColl2.remove({shard: 1, _id: "txn2-doc-2"}));
 // Perform a write outside of a transaction and confirm that the change stream sees only
 // this write.
 assert.commandWorked(coll.insert({shard: 2, _id: "no-txn-doc-2"}, {writeConcern: {w: "majority"}}));
-assertWritesVisibleWithCapture(changeStreamCursor,
-                               [],
-                               [{operationType: "insert", _id: "no-txn-doc-2"}],
-                               changeListShard1,
-                               changeListShard2);
+assertWritesVisibleWithCapture(
+    changeStreamCursor,
+    [],
+    [{operationType: "insert", _id: "no-txn-doc-2"}],
+    changeListShard1,
+    changeListShard2,
+);
 
 // Perform a write outside of the transaction.
 assert.commandWorked(coll.insert({shard: 1, _id: "no-txn-doc-3"}, {writeConcern: {w: "majority"}}));
-assertWritesVisibleWithCapture(changeStreamCursor,
-                               [
-                                   {operationType: "insert", _id: "no-txn-doc-3"},
-                               ],
-                               [],
-                               changeListShard1,
-                               changeListShard2);
+assertWritesVisibleWithCapture(
+    changeStreamCursor,
+    [{operationType: "insert", _id: "no-txn-doc-3"}],
+    [],
+    changeListShard1,
+    changeListShard2,
+);
 
 // Commit first transaction and confirm that the change stream sees the changes expected
 // from each shard.
 assert.commandWorked(session1.commitTransaction_forTesting());
 assertWritesVisibleWithCapture(
     changeStreamCursor,
-    [{operationType: "insert", _id: "txn1-doc-1"}, {operationType: "update", _id: "txn1-doc-1"}],
+    [
+        {operationType: "insert", _id: "txn1-doc-1"},
+        {operationType: "update", _id: "txn1-doc-1"},
+    ],
     [
         {operationType: "insert", _id: "txn1-doc-2"},
         {operationType: "update", _id: "txn1-doc-2"},
-        {operationType: "delete", _id: "txn1-doc-2"}
+        {operationType: "delete", _id: "txn1-doc-2"},
     ],
     changeListShard1,
     changeListShard2,
-    alwaysExpectCommitTimestamp);
+);
 
 // Perform a write outside of the transaction.
 assert.commandWorked(coll.insert({shard: 2, _id: "no-txn-doc-4"}, {writeConcern: {w: "majority"}}));
@@ -215,11 +208,13 @@ assert.commandWorked(coll.insert({shard: 2, _id: "no-txn-doc-4"}, {writeConcern:
 // Abort second transaction and confirm that the change stream sees only the previous
 // non-transaction write.
 assert.commandWorked(session2.abortTransaction_forTesting());
-assertWritesVisibleWithCapture(changeStreamCursor,
-                               [],
-                               [{operationType: "insert", _id: "no-txn-doc-4"}],
-                               changeListShard1,
-                               changeListShard2);
+assertWritesVisibleWithCapture(
+    changeStreamCursor,
+    [],
+    [{operationType: "insert", _id: "no-txn-doc-4"}],
+    changeListShard1,
+    changeListShard2,
+);
 changeStreamCursor.close();
 })();
 
@@ -228,7 +223,6 @@ changeStreamCursor.close();
 // documents returned match what was returned for the initial change stream.
 //
 (function() {
-
 /**
  * Iterates over a list of changes and returns the index of the change whose resume token is
  * higher than that of 'changeDoc'. It is expected that 'changeList' entries at this index
@@ -252,10 +246,19 @@ function shardHasDocumentAtChangeListIndex(changeDoc, shardChangeList, changeLis
     assert(changeListIndex < shardChangeList.length);
 
     const expectedChangeDoc = shardChangeList[changeListIndex];
+    // Remove 'commitTimestamp' field from expected and actual events, as this field is only exposed
+    // by default in v8.2.0. Versions before v8.2.0 do not expose this field, and versions after
+    // v8.2.0 only expose this field when the internal flag 'showCommitTimestamp' is set when
+    // opening the change stream.
+    delete expectedChangeDoc.commitTimestamp;
+    delete changeDoc.commitTimestamp;
+
     assert.eq(changeDoc, expectedChangeDoc);
-    assert.eq(expectedChangeDoc.documentKey,
-              changeDoc.documentKey,
-              tojson(changeDoc) + ", " + tojson(expectedChangeDoc));
+    assert.eq(
+        expectedChangeDoc.documentKey,
+        changeDoc.documentKey,
+        tojson(changeDoc) + ", " + tojson(expectedChangeDoc),
+    );
 }
 
 /**
@@ -269,11 +272,11 @@ function confirmResumeForChangeList(changeList, changeListShard1, changeListShar
         let indexShard2 = getPostTokenChangeIndex(resumeDoc, changeListShard2);
         const resumeCursor = coll.watch([], {startAfter: resumeDoc._id, showExpandedEvents: true});
 
-        while ((indexShard1 + indexShard2) < (changeListShard1.length + changeListShard2.length)) {
+        while (indexShard1 + indexShard2 < changeListShard1.length + changeListShard2.length) {
             assert.soon(() => resumeCursor.hasNext());
             const changeDoc = resumeCursor.next();
 
-            if (changeDoc.operationType === 'endOfTransaction') {
+            if (changeDoc.operationType === "endOfTransaction") {
                 continue;
             }
 

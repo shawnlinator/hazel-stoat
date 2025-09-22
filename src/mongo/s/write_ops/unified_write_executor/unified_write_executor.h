@@ -45,7 +45,9 @@ using WriteCommandResponse = std::variant<BatchedCommandResponse, BulkWriteComma
 /**
  * This function will execute the specified write command and return a response.
  */
-WriteCommandResponse executeWriteCommand(OperationContext* opCtx, WriteCommandRef cmdRef);
+WriteCommandResponse executeWriteCommand(OperationContext* opCtx,
+                                         WriteCommandRef cmdRef,
+                                         BSONObj originalCommand = BSONObj());
 
 /**
  * Helper function for executing insert/update/delete commands.
@@ -55,7 +57,9 @@ BatchedCommandResponse write(OperationContext* opCtx, const BatchedCommandReques
 /**
  * Helper function for executing bulk commands.
  */
-BulkWriteCommandReply bulkWrite(OperationContext* opCtx, const BulkWriteCommandRequest& request);
+BulkWriteCommandReply bulkWrite(OperationContext* opCtx,
+                                const BulkWriteCommandRequest& request,
+                                BSONObj originalCommand = BSONObj());
 
 /**
  * Unified write executor feature flag check. Also ensures we only have viewless timeseries

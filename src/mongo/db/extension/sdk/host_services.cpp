@@ -29,10 +29,19 @@
 
 #include "mongo/db/extension/sdk/host_services.h"
 
+#include "mongo/db/extension/sdk/byte_buf_utils.h"
+
 namespace mongo::extension::sdk {
 
 // The static instance of HostServicesHandle is initially set to nullptr. It will be set "for real"
 // at the very start of extension initialization, before any extension should attempt to access it.
 HostServicesHandle HostServicesHandle::_hostServices(nullptr);
 
+BSONObj HostServicesHandle::createExtensionLogMessage(
+    std::string message,
+    std::int32_t code,
+    mongo::extension::MongoExtensionLogSeverityEnum severity) {
+    mongo::extension::MongoExtensionLog log(std::move(message), code, severity);
+    return log.toBSON();
+}
 }  // namespace mongo::extension::sdk

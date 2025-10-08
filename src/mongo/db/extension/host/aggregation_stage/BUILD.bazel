@@ -9,9 +9,9 @@ mongo_cc_library(
         "ast_node.h",
         "parse_node.h",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         "//src/mongo:base",
         "//src/mongo/db/extension/public:api",
+        "//src/mongo/db/extension/shared",
     ],
 )

@@ -28,9 +28,9 @@
  */
 #pragma once
 #include "mongo/base/string_data.h"
-#include "mongo/db/extension/host/handle.h"
 #include "mongo/db/extension/public/api.h"
-#include "mongo/db/extension/sdk/byte_buf_utils.h"
+#include "mongo/db/extension/shared/byte_buf_utils.h"
+#include "mongo/db/extension/shared/handle/handle.h"
 #include "mongo/util/modules.h"
 
 
@@ -52,7 +52,7 @@ public:
             return StringData();
         }
 
-        auto stringView = sdk::byteViewAsStringView(vtable().get_view(get()));
+        auto stringView = byteViewAsStringView(vtable().get_view(get()));
         return StringData{stringView.data(), stringView.size()};
     }
 };

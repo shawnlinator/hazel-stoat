@@ -44,4 +44,9 @@ std::unique_ptr<CollectionShardingState> CollectionShardingStateFactoryShard::ma
     return std::make_unique<CollectionShardingRuntime>(_serviceContext, nss);
 }
 
+const StaleShardCollectionMetadataHandler&
+CollectionShardingStateFactoryShard::getStaleShardExceptionHandler() const {
+    return _staleExceptionHandler;
+}
+
 }  // namespace mongo

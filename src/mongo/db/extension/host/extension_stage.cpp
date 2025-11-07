@@ -30,15 +30,15 @@
 #include "mongo/db/extension/host/extension_stage.h"
 
 #include "mongo/db/exec/agg/document_source_to_stage_registry.h"
-#include "mongo/db/extension/host/document_source_extension_expandable.h"
+#include "mongo/db/extension/host/document_source_extension_optimizable.h"
 namespace mongo {
 
 using namespace extension::host;
 
 boost::intrusive_ptr<exec::agg::Stage> documentSourceExtensionToStageFn(
     const boost::intrusive_ptr<DocumentSource>& source) {
-    auto* documentSource = dynamic_cast<DocumentSourceExtensionExpandable*>(source.get());
-    tassert(10980400, "expected 'DocumentSourceExtensionExpandable' type", documentSource);
+    auto* documentSource = dynamic_cast<DocumentSourceExtensionOptimizable*>(source.get());
+    tassert(10980400, "expected 'DocumentSourceExtensionOptimizable' type", documentSource);
     return make_intrusive<exec::agg::ExtensionStage>(documentSource->getSourceName(),
                                                      documentSource->getExpCtx());
 }
@@ -46,7 +46,7 @@ boost::intrusive_ptr<exec::agg::Stage> documentSourceExtensionToStageFn(
 namespace exec::agg {
 
 REGISTER_AGG_STAGE_MAPPING(extensionStage,
-                           DocumentSourceExtensionExpandable::id,
+                           DocumentSourceExtensionOptimizable::id,
                            documentSourceExtensionToStageFn);
 
 ExtensionStage::ExtensionStage(StringData name,

@@ -432,13 +432,6 @@
           "value": "site_scons/mongo/download_windows_sasl.py"
         }
       ],
-      "evidence": {
-        "occurrences": [
-          {
-            "location": "src/third_party/sasl"
-          }
-        ]
-      },
       "scope": "optional"
     },
     {
@@ -559,7 +552,7 @@
       "evidence": {
         "occurrences": [
           {
-            "location": "src/third_party/wiredtiger/test/3rdparty/discover-0.4.0-locally-modified"
+            "location": "src/third_party/wiredtiger/test/3rdparty/discover-0.4.0"
           }
         ]
       },

@@ -49,7 +49,9 @@ class BasicFTSPhraseMatcher final : public FTSPhraseMatcher {
 public:
     BasicFTSPhraseMatcher() = default;
 
-    bool phraseMatches(StringData phrase, StringData haystack, Options options) const override;
+    bool phraseMatches(const std::string& phrase,
+                       const std::string& haystack,
+                       Options options) const override;
 };
 
 }  // namespace fts

@@ -184,6 +184,7 @@ selector:
     - uses_map_reduce_internal_merge_pipeline
     - uses_parallel_shell
     - requires_getmore
+    - requires_auth
   roots:
     - jstests/core/**/*.js
     - jstests/core_sharding/**/*.js

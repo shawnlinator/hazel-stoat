@@ -37,6 +37,7 @@
 #include "mongo/otel/metrics/instrumentation/mongodb_build_info_metrics.h"
 #include "mongo/otel/metrics/instrumentation/observable_mutex_metrics.h"
 #include "mongo/otel/metrics/instrumentation/process_health_metrics.h"
+#include "mongo/otel/metrics/instrumentation/query_memory_metrics.h"
 #include "mongo/otel/metrics/instrumentation/system_health_metrics.h"
 #include "mongo/otel/metrics/instrumentation/system_mount_metrics.h"
 
@@ -49,6 +50,7 @@ void installCommonOtelMetrics(ServiceContext* svcCtx) {
     installSystemHealthOtelMetrics(svcCtx);
     installObservableMutexMetrics(svcCtx);
     installMongoDBBuildInfoMetrics();
+    installQueryMemoryOtelMetrics(svcCtx);
     admission::IngressRequestRateLimiter::get(svcCtx).installOtelMetrics(svcCtx);
 }
 

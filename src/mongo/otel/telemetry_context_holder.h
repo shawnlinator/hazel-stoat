@@ -58,6 +58,17 @@ public:
     void clearTelemetryContext() {
         _current.reset();
     }
+    /**
+     * Clones the current TelemetryContext, and returns nullptr if no context is set. See
+     * TelemetryContext::clone() for more details. Note that it is safe to call Span::start with the
+     * returned value even if it is nullptr.
+     */
+    std::shared_ptr<TelemetryContext> cloneTelemetryContext() {
+        if (!_current) {
+            return nullptr;
+        }
+        return _current->clone();
+    }
 
 private:
     std::shared_ptr<TelemetryContext> _current;

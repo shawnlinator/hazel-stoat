@@ -30,6 +30,7 @@
 #pragma once
 
 #include "mongo/bson/bsonobjbuilder.h"
+#include "mongo/db/memory_tracking/memory_usage_limit.h"
 #include "mongo/util/modules.h"
 
 namespace mongo {
@@ -60,9 +61,10 @@ enum class StageMemoryLimit {
 };
 
 /**
- * Returns the memory limit in bytes for the given stage according to the server parameters.
+ * Returns the memory limit for the given stage according to the server parameters. Call 'get()' on
+ * the result for a plain byte count.
  */
-long long loadMemoryLimit(StageMemoryLimit stage);
+MemoryUsageLimit loadMemoryLimit(StageMemoryLimit stage);
 
 /**
  * Adds values of the server parameters, responsible for the memory limits, to the explain command

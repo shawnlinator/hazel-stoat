@@ -11,7 +11,8 @@ WORKDIR /src
 # .bazelversion via the BAZELISK_BASE_URL in .bazeliskrc (public S3 bucket).
 RUN python3 buildscripts/install_bazel.py
 
-ENV PATH="$HOME/.local/bin:$PATH"
+# $HOME is unset in a classic (non-buildx) docker build, so hardcode root's dir.
+ENV PATH="/root/.local/bin:$PATH"
 
 # --config=native_toolchain opts out of the hermetic Linux action container
 # (which needs podman on the host) and compiles with the host GCC 14.

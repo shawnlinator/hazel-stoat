@@ -16,4 +16,4 @@ ENV PATH="$HOME/.local/bin:$PATH"
 # --config=native_toolchain opts out of the hermetic Linux action container
 # (which needs podman on the host) and compiles with the host GCC 14.
 RUN CC=gcc-14 CXX=g++-14 bazel build --config=native_toolchain --compiler_type=gcc \
-    --jobs=16 --disable_warnings_as_errors=True install-mongod
+    --jobs=8 --disable_warnings_as_errors=True install-mongod
